@@ -17,7 +17,7 @@ using namespace std;
 
 typedef pair<double,int> Pdi;
 
-#define maxn 109
+#define maxn 309
 
 struct node{double x,y;} Coo[maxn], q[maxn<<2];
 
