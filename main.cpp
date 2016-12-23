@@ -23,11 +23,17 @@ typedef pair<double,int> Pdi;
 
 struct node{double x,y;} Coo[1009];
 
+struct F{int a,b,c,P; double S;} q[maxs];
+bool cmpP(F a, F b){return a.P<b.P;}
+bool cmpS(F a, F b){return a.S<b.S;}
+
 string Name[1009];
 
-int n, tot, Total, mxLevel, lb_cal[maxn][maxn], lv[maxs], nx[maxs], Count[11];
+int n, tot, Total, QLevel, lb_cal[maxn][maxn], lv[maxs], nx[maxs], po[maxs], Count[11];
 
 clock_t gap;
+
+inline int min(int a, int b){return a<b?a:b;}
 
 inline void toDouble(string str)
 {
@@ -92,6 +98,11 @@ inline void AddLine(Json::Value &ret, int a, int b, int v)
 	tot++;
 }
 
+inline double FieldS(int a, int b, int c)
+{
+	return fabs(Coo[a].x*Coo[b].y+Coo[b].x*Coo[c].y+Coo[c].x*Coo[a].y - Coo[a].y*Coo[b].x-Coo[b].y*Coo[c].x-Coo[c].y*Coo[a].x)/2;
+}
+
 inline bool Dir(int a, int b, int c)
 {
 	return (Coo[b].x-Coo[a].x)*(Coo[c].y-Coo[a].y)<(Coo[c].x-Coo[a].x)*(Coo[b].y-Coo[a].y);
@@ -106,7 +117,7 @@ inline int GetLabel(int a, int b, int c){return lb_cal[a][b]+c-b;}
 
 void Output(Json::Value &ret, int a, int b, int c, int v)
 {
-	if (v == mxLevel) return;
+	if (v == QLevel) return;
 	if (v == 1) AddLine(ret,a,b,v), AddLine(ret,b,c,v), AddLine(ret,c,a,v);
 	if (a>b) swap(a,b); if (b>c) swap(b,c); if (a>b) swap(a,b);
 	int x=GetLabel(a,b,c), d=nx[x]; v++;
@@ -119,10 +130,44 @@ void Output(Json::Value &ret, int a, int b, int c, int v)
 int FieldLevel(int a, int b, int c)
 {
 	if (a>b) swap(a,b); if (b>c) swap(b,c); if (a>b) swap(a,b);
-	int x=GetLabel(a,b,c), tmp;
-	if (lv[x]) return lv[x]; tot++; 
-	rep(i, 1, n) if (i!=a && i!=b && i!=c && inField(a,b,c,i) && (tmp=min(FieldLevel(a,b,i), min(FieldLevel(b,c,i), FieldLevel(c,a,i))))>lv[x])
-		lv[x]=tmp, nx[x]=i;
+	int x=GetLabel(a,b,c), tmp, y;
+	if (lv[x]) return lv[x]; tot++;
+	for(int ta=1, tb=a, tc=b, td=c; ta<tb; ta++) if (inField(a,b,c,ta))
+	{
+		po[x]++; tmp=9;
+		y=GetLabel(ta,tb,tc); if ((lv[y]?lv[y]:FieldLevel(ta,tb,tc))<=lv[x]) continue; else tmp=min(tmp,lv[y]);
+		y=GetLabel(ta,tb,td); if ((lv[y]?lv[y]:FieldLevel(ta,tb,td))<=lv[x]) continue; else tmp=min(tmp,lv[y]);
+		y=GetLabel(ta,tc,td); if ((lv[y]?lv[y]:FieldLevel(ta,tc,td))<=lv[x]) continue; else tmp=min(tmp,lv[y]);
+		//y=GetLabel(tb,tc,td); if ((lv[y]?lv[y]:FieldLevel(tb,tc,td))<=lv[x]) continue; else tmp=min(tmp,lv[y]);
+		lv[x]=tmp, nx[x]=ta;
+	}
+	for(int ta=a, tb=a+1, tc=b, td=c; tb<tc; tb++) if (inField(a,b,c,tb))
+	{
+		po[x]++; tmp=9;
+		y=GetLabel(ta,tb,tc); if ((lv[y]?lv[y]:FieldLevel(ta,tb,tc))<=lv[x]) continue; else tmp=min(tmp,lv[y]);
+		y=GetLabel(ta,tb,td); if ((lv[y]?lv[y]:FieldLevel(ta,tb,td))<=lv[x]) continue; else tmp=min(tmp,lv[y]);
+		//y=GetLabel(ta,tc,td); if ((lv[y]?lv[y]:FieldLevel(ta,tc,td))<=lv[x]) continue; else tmp=min(tmp,lv[y]);
+		y=GetLabel(tb,tc,td); if ((lv[y]?lv[y]:FieldLevel(tb,tc,td))<=lv[x]) continue; else tmp=min(tmp,lv[y]);
+		lv[x]=tmp, nx[x]=tb;
+	}
+	for(int ta=a, tb=b, tc=b+1, td=c; tc<td; tc++) if (inField(a,b,c,tc))
+	{
+		po[x]++; tmp=9;
+		y=GetLabel(ta,tb,tc); if ((lv[y]?lv[y]:FieldLevel(ta,tb,tc))<=lv[x]) continue; else tmp=min(tmp,lv[y]);
+		//y=GetLabel(ta,tb,td); if ((lv[y]?lv[y]:FieldLevel(ta,tb,td))<=lv[x]) continue; else tmp=min(tmp,lv[y]);
+		y=GetLabel(ta,tc,td); if ((lv[y]?lv[y]:FieldLevel(ta,tc,td))<=lv[x]) continue; else tmp=min(tmp,lv[y]);
+		y=GetLabel(tb,tc,td); if ((lv[y]?lv[y]:FieldLevel(tb,tc,td))<=lv[x]) continue; else tmp=min(tmp,lv[y]);
+		lv[x]=tmp, nx[x]=tc;
+	}
+	for(int ta=a, tb=b, tc=c, td=c+1; td<=n; td++) if (inField(a,b,c,td))
+	{
+		po[x]++; tmp=9;
+		//y=GetLabel(ta,tb,tc); if ((lv[y]?lv[y]:FieldLevel(ta,tb,tc))<=lv[x]) continue; else tmp=min(tmp,lv[y]);
+		y=GetLabel(ta,tb,td); if ((lv[y]?lv[y]:FieldLevel(ta,tb,td))<=lv[x]) continue; else tmp=min(tmp,lv[y]);
+		y=GetLabel(ta,tc,td); if ((lv[y]?lv[y]:FieldLevel(ta,tc,td))<=lv[x]) continue; else tmp=min(tmp,lv[y]);
+		y=GetLabel(tb,tc,td); if ((lv[y]?lv[y]:FieldLevel(tb,tc,td))<=lv[x]) continue; else tmp=min(tmp,lv[y]);
+		lv[x]=tmp, nx[x]=td;
+	}
 	if ((double)(clock()-gap)/CLOCKS_PER_SEC>=0.1)
 		system("cls"), printf("%.6lf%%", 100.0*tot/Total), gap=clock();
 	return ++lv[x];
@@ -136,23 +181,42 @@ int main()
 	
 	gap=clock(); tot=0; rep(i, 1, n) rep(j, i+1, n) rep(k, j+1, n) Count[FieldLevel(i,j,k)]++;
 	
+	system("cls");
+	
+	rep(i, 2, 9) printf("Level %d: %d\n", i, Count[i]); 
+	puts(""); puts("");
+	
+	printf("Field Level you need? (3-6)		"); QLevel=1; scanf("%d", &QLevel);
+	
 	freopen("result.txt", "w", stdout);
 	
-	printf("Perfect Field:\n");
-	rep(i, 2, 9) printf("%d: %d\n", i, Count[i]); 
-	puts("");
+	int tmp=0;
+	for(int i=1; i<=n; i++) for(int j=i+1; j<=n; j++) for(int k=j+1; k<=n; k++) if (lv[GetLabel(i,j,k)]>=QLevel)
+		q[++tmp]=(F){i,j,k,po[GetLabel(i,j,k)],FieldS(i,j,k)};
 	
-	Json::Value ret;
-	rep(i, 2, 9) if (Count[i]) mxLevel=i;
-	bool fg=true; tot=0;
-	for(int i=1; i<=n&&fg; i++) 
-		for(int j=i+1; j<=n&&fg; j++) 
-			for(int k=j+1; k<=n&&fg; k++)
-				if (lv[GetLabel(i,j,k)]==mxLevel && fg) Output(ret,i,j,k,1), fg=false;
+	sort(q+1, q+1+tmp, cmpP);
+	rep(i, 1, min(tmp,10))
+	{
+		printf("#%d		P:%d\n\n", i, q[i].P);
+		Json::Value ret; tot=0;
+		Output(ret,q[i].a,q[i].b,q[i].c,1);
+		
+		Json::FastWriter writer;
+		//Json::StyledWriter writer;
+		cout << writer.write(ret) << endl << endl;
+	}
 	
-	Json::FastWriter writer;
-	//Json::StyledWriter writer;
-	cout << writer.write(ret) << endl;
+	sort(q+1, q+1+tmp, cmpS);
+	rep(i, 1, min(tmp,10))
+	{
+		printf("#%d		S:%.10lf\n\n", i, q[i].S);
+		Json::Value ret; tot=0;
+		Output(ret,q[i].a,q[i].b,q[i].c,1);
+		
+		Json::FastWriter writer;
+		//Json::StyledWriter writer;
+		cout << writer.write(ret) << endl << endl;
+	}
 	
 	fclose(stdout);
 	
