@@ -271,16 +271,16 @@ inline void OutputResult()
 		q[++tmp]=(F){i,j,k,po[GetPID(i,j,k)],FieldS(i,j,k),pretty[GetPID(i,j,k)]};
 	
 	sort(q+1, q+1+tmp, cmpP);
-	rep(i, 1, min(tmp,10)) printf("#%d		P:%d\n\n", i, q[i].P), OutputPlan(GetPID(q[i].a,q[i].b,q[i].c));
+	rep(i, 1, min(tmp,10)) printf("区域点数最少：#%d\n\n", i), OutputPlan(GetPID(q[i].a,q[i].b,q[i].c));
 		
 	sort(q+1, q+1+tmp, cmpS);
-	rep(i, 1, min(tmp,10)) printf("#%d		S:%.10lf\n\n", i, q[i].S), OutputPlan(GetPID(q[i].a,q[i].b,q[i].c));
+	rep(i, 1, min(tmp,10)) printf("面积最小：#%d\n\n", i), OutputPlan(GetPID(q[i].a,q[i].b,q[i].c));
 	
 	sort(q+1, q+1+tmp, cmpG);
-	rep(i, 1, min(tmp,10)) printf("#%d		G:%.10lf\n\n", i, q[i].G), OutputPlan(GetPID(q[i].a,q[i].b,q[i].c));
+	rep(i, 1, min(tmp,10)) printf("长得最正：#%d\n\n", i), OutputPlan(GetPID(q[i].a,q[i].b,q[i].c));
 	
 	random_shuffle(q+1, q+1+tmp);
-	rep(i, 1, min(tmp,10)) printf("Random #%d\n", i), OutputPlan(GetPID(q[i].a,q[i].b,q[i].c));
+	rep(i, 1, min(tmp,10)) printf("Random #%d\n\n", i), OutputPlan(GetPID(q[i].a,q[i].b,q[i].c));
 	
 	fclose(stdout);
 }
