@@ -43,6 +43,10 @@ Json::Value bm, dt, ini_bm, null_dt;
 
 inline int min(int a, int b){return a<b?a:b;}
 
+inline double min3(double a, double b, double c){return (a<=b&&a<=c)?a:(b<=c?b:c);}
+
+inline double max3(double a, double b, double c){return (a>=b&&a>=c)?a:(b>=c?b:c);}
+
 inline double dis(int a, int b){return sqrt(pow(P[a].x-P[b].x,2) + pow(P[a].y-P[b].y,2));}
 
 inline double FieldS(int a, int b, int c)
@@ -58,9 +62,16 @@ inline double FangCha(double a, double b, double c)
 	return (pow(a-1,2)+pow(b-1,2)+pow(c-1,2))/3;
 }
 
+inline double abc(double a, double b, double c)
+{
+	double sum=a+b+c; a=a/sum, b=b/sum, c=c/sum;
+	return max3(a,b,c)-min3(a,b,c);
+}
+
 inline double CalPretty(int a, int b, int c, int d)
 {
-	return FangCha(dis(a,d),dis(b,d),dis(c,d))+FangCha(disL(a,b,d),disL(b,c,d),disL(c,a,d));
+	int r=FieldS(a,b,c)*2/(dis(a,d)+dis(b,d)+dis(c,d));
+	return (max3(dis(a,d),dis(b,d),dis(c,d))-min3(dis(a,d),dis(b,d),dis(c,d)))/r;
 }
 
 inline double Dir(int a, int b, int c)
@@ -132,7 +143,7 @@ int FieldLevel(int a, int b, int c)
 		y=GetPID(ta,tb,tc); if ((lv[y]?lv[y]:FieldLevel(ta,tb,tc))<lv[x]) continue; else tmp=min(tmp,lv[y]), tmp2+=pretty[y];
 		y=GetPID(ta,tb,td); if ((lv[y]?lv[y]:FieldLevel(ta,tb,td))<lv[x]) continue; else tmp=min(tmp,lv[y]), tmp2+=pretty[y];
 		y=GetPID(ta,tc,td); if ((lv[y]?lv[y]:FieldLevel(ta,tc,td))<lv[x]) continue; else tmp=min(tmp,lv[y]), tmp2+=pretty[y];
-		tmp2*=0.8; tmp2+=CalPretty(a,b,c,ta); if (tmp>lv[x] || (tmp==lv[x] && tmp2<mn)) lv[x]=tmp, nx[x]=ta, mn=tmp2;
+		tmp2*=0.6; tmp2+=CalPretty(a,b,c,ta); if (tmp>lv[x] || (tmp==lv[x] && tmp2<mn)) lv[x]=tmp, nx[x]=ta, mn=tmp2;
 	}
 	for(int ta=a, tb=a+1, tc=b, td=c; tb<tc; tb++) if (inField(a,b,c,tb))
 	{
@@ -140,7 +151,7 @@ int FieldLevel(int a, int b, int c)
 		y=GetPID(ta,tb,tc); if ((lv[y]?lv[y]:FieldLevel(ta,tb,tc))<=lv[x]) continue; else tmp=min(tmp,lv[y]), tmp2+=pretty[y];
 		y=GetPID(ta,tb,td); if ((lv[y]?lv[y]:FieldLevel(ta,tb,td))<=lv[x]) continue; else tmp=min(tmp,lv[y]), tmp2+=pretty[y];
 		y=GetPID(tb,tc,td); if ((lv[y]?lv[y]:FieldLevel(tb,tc,td))<=lv[x]) continue; else tmp=min(tmp,lv[y]), tmp2+=pretty[y];
-		tmp2*=0.8; tmp2+=CalPretty(a,b,c,tb); if (tmp>lv[x] || (tmp==lv[x] && tmp2<mn)) lv[x]=tmp, nx[x]=tb, mn=tmp2;
+		tmp2*=0.6; tmp2+=CalPretty(a,b,c,tb); if (tmp>lv[x] || (tmp==lv[x] && tmp2<mn)) lv[x]=tmp, nx[x]=tb, mn=tmp2;
 	}
 	for(int ta=a, tb=b, tc=b+1, td=c; tc<td; tc++) if (inField(a,b,c,tc))
 	{
@@ -148,7 +159,7 @@ int FieldLevel(int a, int b, int c)
 		y=GetPID(ta,tb,tc); if ((lv[y]?lv[y]:FieldLevel(ta,tb,tc))<=lv[x]) continue; else tmp=min(tmp,lv[y]), tmp2+=pretty[y];
 		y=GetPID(ta,tc,td); if ((lv[y]?lv[y]:FieldLevel(ta,tc,td))<=lv[x]) continue; else tmp=min(tmp,lv[y]), tmp2+=pretty[y];
 		y=GetPID(tb,tc,td); if ((lv[y]?lv[y]:FieldLevel(tb,tc,td))<=lv[x]) continue; else tmp=min(tmp,lv[y]), tmp2+=pretty[y];
-		tmp2*=0.8; tmp2+=CalPretty(a,b,c,tc); if (tmp>lv[x] || (tmp==lv[x] && tmp2<mn)) lv[x]=tmp, nx[x]=tc, mn=tmp2;
+		tmp2*=0.6; tmp2+=CalPretty(a,b,c,tc); if (tmp>lv[x] || (tmp==lv[x] && tmp2<mn)) lv[x]=tmp, nx[x]=tc, mn=tmp2;
 	}
 	for(int ta=a, tb=b, tc=c, td=c+1; td<=n; td++) if (inField(a,b,c,td))
 	{
@@ -156,7 +167,7 @@ int FieldLevel(int a, int b, int c)
 		y=GetPID(ta,tb,td); if ((lv[y]?lv[y]:FieldLevel(ta,tb,td))<=lv[x]) continue; else tmp=min(tmp,lv[y]), tmp2+=pretty[y];
 		y=GetPID(ta,tc,td); if ((lv[y]?lv[y]:FieldLevel(ta,tc,td))<=lv[x]) continue; else tmp=min(tmp,lv[y]), tmp2+=pretty[y];
 		y=GetPID(tb,tc,td); if ((lv[y]?lv[y]:FieldLevel(tb,tc,td))<=lv[x]) continue; else tmp=min(tmp,lv[y]), tmp2+=pretty[y];
-		tmp2*=0.8; tmp2+=CalPretty(a,b,c,td); if (tmp>lv[x] || (tmp==lv[x] && tmp2<mn)) lv[x]=tmp, nx[x]=td, mn=tmp2;
+		tmp2*=0.6; tmp2+=CalPretty(a,b,c,td); if (tmp>lv[x] || (tmp==lv[x] && tmp2<mn)) lv[x]=tmp, nx[x]=td, mn=tmp2;
 	}
 	if ((double)(clock()-gap)/CLOCKS_PER_SEC>=0.1)
 		system("cls"), printf("%.6lf%%", 100.0*tot/Total), gap=clock();
@@ -268,7 +279,7 @@ inline void OutputResult()
 	
 	int tmp=0;
 	for(int i=1; i<=n; i++) for(int j=i+1; j<=n; j++) for(int k=j+1; k<=n; k++) if (lv[GetPID(i,j,k)]>=QLevel)
-		q[++tmp]=(F){i,j,k,po[GetPID(i,j,k)],FieldS(i,j,k),pretty[GetPID(i,j,k)]};
+		q[++tmp]=(F){i,j,k,po[GetPID(i,j,k)],FieldS(i,j,k),pretty[GetPID(i,j,k)]+abc(dis(i,j),dis(j,k),dis(k,i))*2};
 	
 	sort(q+1, q+1+tmp, cmpP);
 	rep(i, 1, min(tmp,10)) printf("区域点数最少：#%d\n\n", i), OutputPlan(GetPID(q[i].a,q[i].b,q[i].c));
