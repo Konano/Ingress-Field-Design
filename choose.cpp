@@ -31,7 +31,8 @@ struct node
 
 struct F{int a,b,c,P; double S,G;} q[maxs];
 bool cmpP(F a, F b){return a.P<b.P;}
-bool cmpS(F a, F b){return a.S<b.S;}
+bool cmpSS(F a, F b){return a.S<b.S;}
+bool cmpSB(F a, F b){return a.S>b.S;}
 bool cmpG(F a, F b){return a.G<b.G;}
 
 int n, tot, Total, QLevel, pid_cal[maxn][maxn], lv[maxs], nx[maxs], po[maxs], Count[9];
@@ -281,17 +282,23 @@ inline void OutputResult()
 	for(int i=1; i<=n; i++) for(int j=i+1; j<=n; j++) for(int k=j+1; k<=n; k++) if (lv[GetPID(i,j,k)]>=QLevel)
 		q[++tmp]=(F){i,j,k,po[GetPID(i,j,k)],FieldS(i,j,k),pretty[GetPID(i,j,k)]+abc(dis(i,j),dis(j,k),dis(k,i))*2};
 	
-	sort(q+1, q+1+tmp, cmpP);
-	rep(i, 1, min(tmp,10)) printf("区域点数最少：#%d\n\n", i), OutputPlan(GetPID(q[i].a,q[i].b,q[i].c));
-		
-	sort(q+1, q+1+tmp, cmpS);
-	rep(i, 1, min(tmp,10)) printf("面积最小：#%d\n\n", i), OutputPlan(GetPID(q[i].a,q[i].b,q[i].c));
 	
+	sort(q+1, q+1+tmp, cmpP);
+	rep(i, 1, min(tmp,10)) printf("区域点数最少：#%d			数量：%d\n\n", i, q[i].P), OutputPlan(GetPID(q[i].a,q[i].b,q[i].c));
+	
+	sort(q+1, q+1+tmp, cmpSS);
+	rep(i, 1, min(tmp,10)) printf("面积最小：#%d\n\n", i), OutputPlan(GetPID(q[i].a,q[i].b,q[i].c));
+		
+	sort(q+1, q+1+tmp, cmpSB);
+	rep(i, 1, min(tmp,10)) printf("面积最大：#%d\n\n", i), OutputPlan(GetPID(q[i].a,q[i].b,q[i].c));
+	
+	/* 
 	sort(q+1, q+1+tmp, cmpG);
 	rep(i, 1, min(tmp,10)) printf("长得最正：#%d\n\n", i), OutputPlan(GetPID(q[i].a,q[i].b,q[i].c));
+	*/
 	
 	random_shuffle(q+1, q+1+tmp);
-	rep(i, 1, min(tmp,10)) printf("Random #%d\n\n", i), OutputPlan(GetPID(q[i].a,q[i].b,q[i].c));
+	rep(i, 1, min(tmp,30)) printf("Random #%d\n\n", i), OutputPlan(GetPID(q[i].a,q[i].b,q[i].c));
 	
 	fclose(stdout);
 }
@@ -302,10 +309,19 @@ int main()
 	
 	int tmp=0; rep(i, 1, n) rep(j, i+1, n) pid_cal[i][j]=tmp, tmp+=n-j; Total=tmp;
 	
+	system("cls"); printf("总点数：%d\n倒数第二个 Portal：", n); cout << P[n-1].label << endl;
+	getchar();
+	
+	if (n>500)
+	{
+		puts("点数过多，请删减。");
+		getchar(); return 0;
+	}
+	
 	gap=clock(); tot=0; rep(i, 1, n) rep(j, i+1, n) rep(k, j+1, n) Count[FieldLevel(i,j,k)]++;
 	
-	system("cls");
-	rep(i, 2, 7) printf("Level %d: %d\n", i, Count[i]); puts(""); puts("");
+	system("cls"); 
+	rep(i, 3, 7) printf("Level %d: %d\n", i, Count[i]); puts(""); puts("");
 	printf("请问要来份多大的竹笋？ (3-6)    "); QLevel=1; scanf("%d", &QLevel);
 	
 	puts("有关信息正在输出到result.txt，祝你好运>.<");

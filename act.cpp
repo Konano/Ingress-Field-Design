@@ -40,7 +40,7 @@ void dfs(int dep, int a, int b, int c)
 	LB[a][b]=++tot, LB[b][c]=++tot, LB[c][a]=++tot;
 	if (dep==6) return; else dep++;
 	int mid=g[dep]+(++Count[dep]);
-	M0[mid]=toString(dep, Count[dep]);
+	M0[mid]=toString(dep, Count[dep]), M1[M0[mid]]=mid;
 	dfs(dep,mid,a,b), dfs(dep,mid,b,c), dfs(dep,mid,c,a);
 	F[mid][0]=a, F[mid][1]=b, F[mid][2]=c;
 }
@@ -82,9 +82,9 @@ inline void ReadBookmark(const char *localFileName) // ∂¡»ÎJSON
 		for(Json::Value::Members::iterator iter = arrayMember.begin(); iter != arrayMember.end(); ++iter)
 		{
 			n++;
-			P[n].latlng = input["portals"][*iter1]["bkmrk"][*iter]["latlng"].asString();
-			P[n].label = input["portals"][*iter1]["bkmrk"][*iter]["label"].asString();
-			ChangetoPosition(n);
+			P[M1[*iter]].latlng = input["portals"][*iter1]["bkmrk"][*iter]["latlng"].asString();
+			P[M1[*iter]].label = input["portals"][*iter1]["bkmrk"][*iter]["label"].asString();
+			ChangetoPosition(M1[*iter]);
 		}
 	}
 }
