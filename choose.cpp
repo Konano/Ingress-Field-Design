@@ -5,42 +5,189 @@
 #include <iostream>
 #include <fstream>
 #include <ctime>
+#include <queue>
 #include "jsoncpp/json.h"
 
 #define rep(i, l, r) for(int i=l; i<=r; i++)
 #define dow(i, l, r) for(int i=l; i>=r; i--)
 #define clr(x, c) memset(x, c, sizeof(x))
-#define all(x) (x).begin,(x).end
-#define pb push_back
 #define pi acos(-1)
+#define travel(i,j) for(edge *p=fir[i][j]; p; p=p->n)
 
 using namespace std;
 
 typedef pair<double,int> Pdi;
+typedef long double ld;
 
-#define maxn 509
-#define maxs 30000009
+#define maxn 1009
+#define maxs 166167001
 
-#define CHOOSE 0
-
-struct node
+struct Portal
 {
-	double x, y;
+	double x0, y0, x, y, z; int lbx, lby;
 	string guid, latlng, label;
-} P[1009];
+} P[maxn], G[9];
 
-struct F{int a,b,c,P; double S,G;} q[maxs];
-bool cmpP(F a, F b){return a.P<b.P;}
-bool cmpSS(F a, F b){return a.S<b.S;}
-bool cmpSB(F a, F b){return a.S>b.S;}
-bool cmpG(F a, F b){return a.G<b.G;}
+bool cmpX(Portal a, Portal b){return a.x0<b.x0;}
+bool cmpY(Portal a, Portal b){return a.y0<b.y0;}
+bool cmpXY(Portal a, Portal b){return a.x0<b.x0 || (a.x0==b.x0 && a.y0<b.y0);}
 
-int n, tot, Total, QLevel, pid_cal[maxn][maxn], lv[maxs], nx[maxs], po[maxs], Count[9];
-double pretty[maxs];
+struct F{int LB; double S;}; bool operator < (F a, F b){return a.S<b.S;}
+
+struct edge{int v; edge *n;} e[maxn], *fir[50][50], *pt=e;
+
+
+
+
+int n, tot, q[maxn], pid_cal[maxn][maxn];
+
+inline void SWAP(int &a, int &b, int &c) {if (a>b) swap(a,b); if (b>c) swap(b,c); if (a>b) swap(a,b);}
+
+inline int GetLB(int a, int b, int c) {SWAP(a,b,c); return pid_cal[a][b]+c;}
+
+inline void GetPortal(int LB, int &a, int &b, int &c)
+{
+	a=1; while (a<n-2 && pid_cal[a+1][a+2]+a+3<=LB) a++;
+	b=a+1; while (b<n-1 && pid_cal[a][b+1]+b+2<=LB) b++;
+	c=LB-pid_cal[a][b];
+}
+
+
+
+
+inline void Spin(int lb, int a, int b)
+{
+	double x=(P[a].y*P[b].z-P[a].z*P[b].y);
+	double y=(P[a].z*P[b].x-P[a].x*P[b].z);
+	double z=(P[a].x*P[b].y-P[a].y*P[b].x);
+	G[lb].x=(P[b].y*z-P[b].z*y);
+	G[lb].y=(P[b].z*x-P[b].x*z);
+	G[lb].z=(P[b].x*y-P[b].y*x);
+}
+
+inline double COS(){return G[1].x*G[2].x+G[1].y*G[2].y+G[1].z*G[2].z;}
+
+inline double Angle(int a, int b, int c) {Spin(1,a,b); Spin(2,c,b); return COS();} // Spin 增加两个临时向量，COS 计算完删去
+
+inline double Area(int a, int b, int c) {return Angle(a,b,c)+Angle(b,c,a)+Angle(c,a,b)-pi;}
+
+
+
+
+inline void FXL(int a, int b)
+{
+	G[1].x=P[a].y*P[b].z-P[a].z*P[b].y;
+	G[1].y=P[a].z*P[b].x-P[a].x*P[b].z;
+	G[1].z=P[a].x*P[b].y-P[a].y*P[b].x;
+}
+
+inline double COS(int a){return P[a].x*G[1].x+P[a].y*G[1].y+P[a].z*G[1].z;}
+
+inline bool Left(int a, int b, int c) {FXL(a,b); return COS(c)>0;}
+
+inline bool inField(int a, int b, int c, int d)
+{
+	if (d==a || d==b || d==c) return false;
+	if (!Left(a,b,c)) swap(b,c);
+	return Left(a,b,d) && Left(b,c,d) && Left(c,a,d);
+}
+
+
+
+
+
+
+
+inline void ChangetoPosition(int a)
+{
+	istringstream iss(P[a].latlng);
+	char tmp;
+	iss >> P[a].x0 >> tmp >> P[a].y0;
+	P[a].x=cos(P[a].x0/180.0*pi)*cos(P[a].y0/180.0*pi);
+	P[a].y=sin(P[a].x0/180.0*pi)*cos(P[a].y0/180.0*pi);
+	P[a].z=sin(P[a].y0/180.0*pi);
+}
+
+inline void ReadInput(const char *localFileName) // 读入JSON
+{
+	string str, chunk;
+	
+	if (localFileName)
+	{
+		ifstream fin(localFileName);
+		if (fin)
+			while (getline(fin, chunk) && chunk != "")
+				str += chunk;
+		else
+			while (getline(cin, chunk) && chunk != "")
+				str += chunk;
+	}
+	else
+		while (getline(cin, chunk) && chunk != "") str += chunk;
+	
+	Json::Reader reader;
+	Json::Value input;
+	reader.parse(str, input);
+	
+	Json::Value::Members arrayMember = input["portals"]["idOthers"]["bkmrk"].getMemberNames();
+	for(Json::Value::Members::iterator iter = arrayMember.begin(); iter != arrayMember.end(); ++iter)
+	{
+		n++;
+		P[n].guid = input["portals"]["idOthers"]["bkmrk"][*iter]["guid"].asString();
+		P[n].latlng = input["portals"]["idOthers"]["bkmrk"][*iter]["latlng"].asString();
+		P[n].label = input["portals"]["idOthers"]["bkmrk"][*iter]["label"].asString();
+		ChangetoPosition(n);
+	}
+}
+
+
+
+
+
+
+
+inline int min3(int a, int b, int c){return (a<=b&&a<=c)?a:(b<=c?b:c);}
+inline int max3(int a, int b, int c){return (a>=b&&a>=c)?a:(b>=c?b:c);}
+
+char Level[maxs]; short int nx[maxs]; int Count[9];
+
+int LevelCal(int a, int b, int c)
+{
+	int LB=GetLB(a,b,c); SWAP(a,b,c);
+	if (Level[LB]) return (int)Level[LB]; else Level[LB]=1;
+	int x0=min3(P[a].lbx,P[b].lbx,P[c].lbx);
+	int x1=max3(P[a].lbx,P[b].lbx,P[c].lbx);
+	int y0=min3(P[a].lby,P[b].lby,P[c].lby);
+	int y1=max3(P[a].lby,P[b].lby,P[c].lby);
+	rep(i, x0, x1) rep(j, y0, y1) travel(i,j) if (p->v<c && inField(a,b,c,p->v))
+	{
+		int d=p->v, A=GetLB(a,b,d), B=GetLB(b,c,d), C=GetLB(c,a,d);
+		int tmp=min3(Level[A]?Level[A]:LevelCal(a,b,d),Level[B]?Level[B]:LevelCal(b,c,d),Level[C]?Level[C]:LevelCal(c,a,d))+1;
+		if (tmp>Level[LB]) Level[LB]=tmp, nx[LB]=d;
+	}
+	return (int)Level[LB];
+}
+
+
+
+
+
+
+
+
+
 
 clock_t gap;
 
 Json::Value bm, dt, ini_bm, null_dt;
+
+
+
+
+
+
+/* int n, tot, Total, QLevel, pid_cal[maxn][maxn], lv[maxs], nx[maxs], po[maxs], Count[9];
+double pretty[maxs];
 
 inline int min(int a, int b){return a<b?a:b;}
 
@@ -87,52 +234,6 @@ inline bool inField(int a, int b, int c, int d)
 
 inline int GetPID(int a, int b, int c){return pid_cal[a][b]+c-b;}
 
-struct xyz{double x,y,z;} pos[maxn];
-bool operator < (xyz a, xyz b){return a.x<b.x || (a.x==b.x && a.y<b.y) || (a.x==b.x && a.y==b.y && a.z<b.z);}
-map<string,xyz> M0;
-map<xyz,string> M1;
-
-inline xyz Ave(xyz a, xyz b, xyz c){return (xyz){(a.x+b.x+c.x)/3, (a.y+b.y+c.y)/3, (a.z+b.z+c.z)/3};}
-
-inline void ChangetoPosition(int a)
-{
-	istringstream iss(P[a].latlng);
-	char tmp;
-	iss >> P[a].x >> tmp >> P[a].y;
-}
-
-inline void ReadInput(const char *localFileName) // 读入JSON
-{
-	string str, chunk;
-	
-	if (localFileName)
-	{
-		ifstream fin(localFileName);
-		if (fin)
-			while (getline(fin, chunk) && chunk != "")
-				str += chunk;
-		else
-			while (getline(cin, chunk) && chunk != "")
-				str += chunk;
-	}
-	else
-		while (getline(cin, chunk) && chunk != "") str += chunk;
-	
-	Json::Reader reader;
-	Json::Value input;
-	reader.parse(str, input);
-	
-	Json::Value::Members arrayMember = input["portals"]["idOthers"]["bkmrk"].getMemberNames();
-	for(Json::Value::Members::iterator iter = arrayMember.begin(); iter != arrayMember.end(); ++iter)
-	{
-		n++;
-		P[n].guid = input["portals"]["idOthers"]["bkmrk"][*iter]["guid"].asString();
-		P[n].latlng = input["portals"]["idOthers"]["bkmrk"][*iter]["latlng"].asString();
-		P[n].label = input["portals"]["idOthers"]["bkmrk"][*iter]["label"].asString();
-		ChangetoPosition(n);
-	}
-}
-
 int FieldLevel(int a, int b, int c)
 {
 	if (a>b) swap(a,b); if (b>c) swap(b,c); if (a>b) swap(a,b);
@@ -170,10 +271,20 @@ int FieldLevel(int a, int b, int c)
 		y=GetPID(tb,tc,td); if ((lv[y]?lv[y]:FieldLevel(tb,tc,td))<=lv[x]) continue; else tmp=min(tmp,lv[y]), tmp2+=pretty[y];
 		tmp2*=0.6; tmp2+=CalPretty(a,b,c,td); if (tmp>lv[x] || (tmp==lv[x] && tmp2<mn)) lv[x]=tmp, nx[x]=td, mn=tmp2;
 	}
-	if ((double)(clock()-gap)/CLOCKS_PER_SEC>=0.1)
-		system("cls"), printf("%.6lf%%", 100.0*tot/Total), gap=clock();
+	
 	pretty[x]=mn; return ++lv[x];
-}
+} */
+
+
+
+int QLevel;
+
+struct xyz{double x,y,z;} pos[maxn];
+bool operator < (xyz a, xyz b){return a.x<b.x || (a.x==b.x && a.y<b.y) || (a.x==b.x && a.y==b.y && a.z<b.z);}
+map<string,xyz> M0;
+map<xyz,string> M1;
+
+inline xyz Ave(xyz a, xyz b, xyz c){return (xyz){(a.x+b.x+c.x)/3, (a.y+b.y+c.y)/3, (a.z+b.z+c.z)/3};}
 
 inline void GetOpinion()
 {
@@ -203,6 +314,15 @@ inline void GetOpinion()
 	}
 }
 
+
+
+
+
+
+
+
+int OPtot;
+
 inline string D_toString(double a)
 {
 	char buffer[20];
@@ -219,21 +339,21 @@ inline string I_toString(int a)
 
 inline void AddLine(int a, int b, int lv)
 {
-	if (lv == 1) dt[tot]["color"] = "#0000ff";
-	if (lv == 2) dt[tot]["color"] = "#2222ff";
-	if (lv == 3) dt[tot]["color"] = "#4444ff";
-	if (lv == 4) dt[tot]["color"] = "#6666ff";
-	if (lv == 5) dt[tot]["color"] = "#8888ff";
-	if (lv == 6) dt[tot]["color"] = "#aaaaff";
+	if (lv == 1) dt[OPtot]["color"] = "#0000ff";
+	if (lv == 2) dt[OPtot]["color"] = "#2222ff";
+	if (lv == 3) dt[OPtot]["color"] = "#4444ff";
+	if (lv == 4) dt[OPtot]["color"] = "#6666ff";
+	if (lv == 5) dt[OPtot]["color"] = "#8888ff";
+	if (lv == 6) dt[OPtot]["color"] = "#aaaaff";
 	
-	dt[tot]["latLngs"][0]["lat"] = D_toString(P[a].x);
-	dt[tot]["latLngs"][0]["lng"] = D_toString(P[a].y);
-	dt[tot]["latLngs"][1]["lat"] = D_toString(P[b].x);
-	dt[tot]["latLngs"][1]["lng"] = D_toString(P[b].y);
+	dt[OPtot]["latLngs"][0]["lat"] = D_toString(P[a].x0);
+	dt[OPtot]["latLngs"][0]["lng"] = D_toString(P[a].y0);
+	dt[OPtot]["latLngs"][1]["lat"] = D_toString(P[b].x0);
+	dt[OPtot]["latLngs"][1]["lng"] = D_toString(P[b].y0);
 	
-	dt[tot]["type"] = "polyline";
+	dt[OPtot]["type"] = "polyline";
 	
-	tot++;
+	OPtot++;
 }
 
 inline void AddPortal(int a, int lv)
@@ -246,8 +366,7 @@ inline void AddPortal(int a, int lv)
 
 void OutputPlan(int a, int b, int c, int lv)
 {
-	if (lv == QLevel) return;
-	if (a>b) swap(a,b); if (b>c) swap(b,c); if (a>b) swap(a,b);
+	if (lv == QLevel) return; SWAP(a,b,c);
 	if (lv == 1)
 	{
 		AddLine(a,b,lv), AddLine(b,c,lv), AddLine(c,a,lv);
@@ -255,7 +374,7 @@ void OutputPlan(int a, int b, int c, int lv)
 		pos[b]=(xyz){0,1,0}, AddPortal(b,lv);
 		pos[c]=(xyz){0,0,1}, AddPortal(c,lv);
 	}
-	int x=GetPID(a,b,c), d=nx[x]; pos[d]=Ave(pos[a],pos[b],pos[c]);
+	int x=GetLB(a,b,c), d=nx[x]; pos[d]=Ave(pos[a],pos[b],pos[c]);
 	AddPortal(d,++lv);
 	AddLine(a,d,lv), AddLine(b,d,lv), AddLine(c,d,lv);
 	OutputPlan(a,b,d,lv);
@@ -263,70 +382,168 @@ void OutputPlan(int a, int b, int c, int lv)
 	OutputPlan(c,a,d,lv);
 }
 
-inline void OutputPlan(int pid)
+inline void OutputPlan(int LB)
 {
-	dt=null_dt; bm=ini_bm; tot=0;
-	
-	rep(i, 1, n) rep(j, i+1, n) if (pid_cal[i][j]<pid && pid-pid_cal[i][j]+j<=n) {OutputPlan(i,j,pid-pid_cal[i][j]+j,1); break;}
+	int a, b, c; GetPortal(LB,a,b,c);
+	dt=null_dt; bm=ini_bm; OPtot=0; OutputPlan(a,b,c,1);
 	
 	Json::FastWriter writer;
 	puts("Bookmarks JSON:"); cout << writer.write(bm) << endl;
 	puts("DrawTools JSON:"); cout << writer.write(dt) << endl;
 }
 
+
+
+
+
+
+
+
+
+
+
+int OPRandom[1000000];
+
 inline void OutputResult()
 {
 	freopen("result.txt", "w", stdout);
 	
-	int tmp=0;
-	for(int i=1; i<=n; i++) for(int j=i+1; j<=n; j++) for(int k=j+1; k<=n; k++) if (lv[GetPID(i,j,k)]>=QLevel)
-		q[++tmp]=(F){i,j,k,po[GetPID(i,j,k)],FieldS(i,j,k),pretty[GetPID(i,j,k)]+abc(dis(i,j),dis(j,k),dis(k,i))*2};
+	priority_queue<F>q; int sz=0, tot=0, LB;
 	
+	/* rep(i, 1, n) rep(j, i+1, n) rep(k, j+1, n) if (Level[LB=GetLB(i,j,k)]>=QLevel)
+	{
+		if (sz==10) q.pop(), sz--;
+		q.push((F){LB,Area(i,j,k)}), sz++;
+		if (tot<=1000000) OPRandom[tot++]=LB;
+	}
 	
-	sort(q+1, q+1+tmp, cmpP);
-	rep(i, 1, min(tmp,10)) printf("区域点数最少：#%d			数量：%d\n\n", i, q[i].P), OutputPlan(GetPID(q[i].a,q[i].b,q[i].c));
+	dow(i, sz, 1) printf("面积最小：#%d\n\n", i), OutputPlan(q.top().LB), q.pop(); */
 	
-	sort(q+1, q+1+tmp, cmpSS);
-	rep(i, 1, min(tmp,10)) printf("面积最小：#%d\n\n", i), OutputPlan(GetPID(q[i].a,q[i].b,q[i].c));
-		
-	sort(q+1, q+1+tmp, cmpSB);
-	rep(i, 1, min(tmp,10)) printf("面积最大：#%d\n\n", i), OutputPlan(GetPID(q[i].a,q[i].b,q[i].c));
+	rep(i, 1, n) rep(j, i+1, n) rep(k, j+1, n) if (Level[LB=GetLB(i,j,k)]>=QLevel)
+	{
+		if (sz==10) q.pop(), sz--;
+		q.push((F){LB,-Area(i,j,k)}), sz++;
+		if (tot<=1000000) OPRandom[tot++]=LB;
+	}
 	
-	/* 
-	sort(q+1, q+1+tmp, cmpG);
-	rep(i, 1, min(tmp,10)) printf("长得最正：#%d\n\n", i), OutputPlan(GetPID(q[i].a,q[i].b,q[i].c));
-	*/
+	dow(i, sz, 1) printf("面积最大：#%d\n\n", i), OutputPlan(q.top().LB), q.pop();
 	
-	random_shuffle(q+1, q+1+tmp);
-	rep(i, 1, min(tmp,30)) printf("Random #%d\n\n", i), OutputPlan(GetPID(q[i].a,q[i].b,q[i].c));
+	random_shuffle(OPRandom, OPRandom+tot);
+	rep(i, 1, min(tot,30)) printf("Random #%d\n\n", i), OutputPlan(OPRandom[i-1]);
 	
 	fclose(stdout);
 }
+
+
+
+
+
+
+
+
+
+
+
 
 int main()
 {
 	ReadInput("portal.txt"); srand(time(NULL));
 	
-	int tmp=0; rep(i, 1, n) rep(j, i+1, n) pid_cal[i][j]=tmp, tmp+=n-j; Total=tmp;
-	
 	system("cls"); printf("总点数：%d\n倒数第二个 Portal：", n); cout << P[n-1].label << endl;
 	getchar();
 	
-	if (n>500)
+	if (n>maxn-9)
 	{
 		puts("点数过多，请删减。");
 		getchar(); return 0;
 	}
 	
-	gap=clock(); tot=0; rep(i, 1, n) rep(j, i+1, n) rep(k, j+1, n) Count[FieldLevel(i,j,k)]++;
+	int GAP=(int)sqrt(n), Btot=0;
+	sort(P+1, P+1+n, cmpX); 
+	for(int st=0; Btot++,st<n; st+=GAP) rep(i, 1, GAP) if (st+i>n) break; else P[st+i].lbx=Btot;
+	Btot=0;
+	sort(P+1, P+1+n, cmpY); 
+	for(int st=0; Btot++,st<n; st+=GAP) rep(i, 1, GAP) if (st+i>n) break; else P[st+i].lby=Btot;
+	sort(P+1, P+1+n, cmpXY); 
+	rep(i, 1, n) pt->v=i, pt->n=fir[P[i].lbx][P[i].lby], fir[P[i].lbx][P[i].lby]=pt++;
+	
+	int tot=0; rep(i, 1, n-2) rep(j, i+1, n-1) tot+=n-j, pid_cal[i][j]=tot-n;
+	
+	int now=0;
+	rep(c, 1, n) dow(a, c-1, 1) rep(b, a+1, c-1) 
+	{
+		Count[LevelCal(a,b,c)]++; now++;
+		if ((double)(clock()-gap)/CLOCKS_PER_SEC>=0.1)
+			system("cls"), printf("%.6lf%%", 100.0*now/tot), gap=clock();
+	}
 	
 	system("cls"); 
-	rep(i, 3, 7) printf("Level %d: %d\n", i, Count[i]); puts(""); puts("");
-	printf("请问要来份多大的竹笋？ (3-6)    "); QLevel=1; scanf("%d", &QLevel);
+	rep(i, 3, 7) printf("%d 重竹笋解: %d 个\n", i, Count[i]); puts(""); puts("");
+	printf("请问要来份多少重的竹笋？(3-7)\n"); 
 	
+	QLevel=3; scanf("%d", &QLevel);
 	puts("有关信息正在输出到result.txt，祝你好运>.<");
 	GetOpinion();
 	OutputResult();
 	
 	return 0;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+/* inline void GetAvaliableArea(int LB, int a, int b, int c)
+{
+	Line A0=GetLine(a,b), A1=Adjust(A0,c);
+	Line B0=GetLine(b,c), B1=Adjust(B0,a);
+	Point tmp; double x_mn, x_mx, y_mn, y_mx;
+	tmp=CROSS(A0,B0); x_mn=x_mx=tmp.x; y_mn=y_mx=tmp.y;
+	tmp=CROSS(A0,B1); Min(x_mn,tmp.x); Max(x_mx,tmp.x); Min(y_mn,tmp.y); Max(y_mx,tmp.y);
+	tmp=CROSS(A1,B0); Min(x_mn,tmp.x); Max(x_mx,tmp.x); Min(y_mn,tmp.y); Max(y_mx,tmp.y);
+	tmp=CROSS(A1,B1); Min(x_mn,tmp.x); Max(x_mx,tmp.x); Min(y_mn,tmp.y); Max(y_mx,tmp.y);
+	int lbx_mn=1, lbx_mx=PortalBtot, lby_mn=1, lby_mx=PortalBtot;
+	while (Bx_mx[lbx_mn]<x_mn) lbx_mn++;
+	while (x_mx<Bx_mn[lbx_mx]) lbx_mx++;
+	while (By_mx[lby_mn]<y_mn) lby_mn++;
+	while (y_mx<By_mn[lby_mx]) lby_mx++;
+	rep(i, lbx_mn, lbx_mx) rep(j, lby_mn, lby_mx) travel(i,j)
+	{
+		int d=p->v;
+		if (InField(a,c,d,b)) Update(GetLB(a,c,d),b,min3(F[GetLB(a,b,c)],F[GetLB(a,b,d)],F[GetLB(d,b,c)])+1);
+	}
+} */
+
+	
+	/* for(int st=0; st<tot; st+=GAP)
+	{
+		Bst[++Btot]=st+1;
+		rep(i, 1, GAP) if (st+i>tot) break; else q0[i].LB=q[st+i], q0[i].S=Area(q[st+i]);
+		sort(q0+1, q0+(st+GAP>tot?tot-st:GAP), cmpS);
+		rep(i, 1, GAP) if (st+i>tot) break; else q[st+i]=q0[i].LB;
+	}
+	
+	priority_queue<F>q1;
+	
+	rep(i, 1, Btot) q1.push((F){i,Area(q[Bst[i]])});
+	
+	gap=clock(); rep(i, 1, tot)
+	{
+		F a=q1.top(); q1.pop(); 
+		int x=q[Bst[a.LB]++]; if (q[Bst[a.LB]] && Bst[a.LB]/GAP!=a.LB) q1.push((F){a.LB,Area(q[Bst[a.LB]])});
+		
+		int a,b,c; GetPortal(x,a,b,c); if (Left(a,b,c)) swap(b,c);
+		
+		if (!Level[x]) Level[x]=1; Count[Level[x]]++;
+		
+		GetAvaliableArea(x,a,b,c);
+		GetAvaliableArea(x,b,c,a);
+		GetAvaliableArea(x,c,a,b);
+	} */
