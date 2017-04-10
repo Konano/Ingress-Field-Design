@@ -12,7 +12,7 @@
 #define dow(i, l, r) for(int i=l; i>=r; i--)
 #define clr(x, c) memset(x, c, sizeof(x))
 #define pi acos(-1)
-#define travel(i,j) for(edge *p=fir[i][j]; p; p=p->n)
+#define travel(i) for(edge *p=fir[i]; p; p=p->n)
 
 using namespace std;
 
@@ -24,17 +24,17 @@ typedef long double ld;
 
 struct Portal
 {
-	double x0, y0, x, y, z; int lbx, lby;
+	double x0, y0, x, y, z;
 	string guid, latlng, label;
 } P[maxn], G[9];
 
-bool cmpX(Portal a, Portal b){return a.x0<b.x0;}
-bool cmpY(Portal a, Portal b){return a.y0<b.y0;}
 bool cmpXY(Portal a, Portal b){return a.x0<b.x0 || (a.x0==b.x0 && a.y0<b.y0);}
 
-struct F{int LB; double S;}; bool operator < (F a, F b){return a.S<b.S;}
+struct F{int v; double S;} qL[maxn], qR[maxn]; bool operator < (F a, F b){return a.S<b.S;}
 
-struct edge{int v; edge *n;} e[maxn], *fir[50][50], *pt=e;
+struct edge{int v; edge *n;} e[maxn], *fir[9], *pt=e;
+
+
 
 
 
@@ -55,6 +55,9 @@ inline void GetPortal(int LB, int &a, int &b, int &c)
 
 
 
+
+
+
 inline void Spin(int lb, int a, int b)
 {
 	double x=(P[a].y*P[b].z-P[a].z*P[b].y);
@@ -65,11 +68,13 @@ inline void Spin(int lb, int a, int b)
 	G[lb].z=(P[b].x*y-P[b].y*x);
 }
 
-inline double COS(){return G[1].x*G[2].x+G[1].y*G[2].y+G[1].z*G[2].z;}
+inline double COS(){return (G[1].x*G[2].x+G[1].y*G[2].y+G[1].z*G[2].z)/sqrt(G[1].x*G[1].x+G[1].y*G[1].y+G[1].z*G[1].z)/sqrt(G[2].x*G[2].x+G[2].y*G[2].y+G[2].z*G[2].z);}
 
-inline double Angle(int a, int b, int c) {Spin(1,a,b); Spin(2,c,b); return COS();} // Spin 增加两个临时向量，COS 计算完删去
+inline double Angle(int a, int b, int c) {Spin(1,a,b); Spin(2,c,b); return acos(COS());} // Spin 增加两个临时向量，COS 计算完删去
 
 inline double Area(int a, int b, int c) {return Angle(a,b,c)+Angle(b,c,a)+Angle(c,a,b)-pi;}
+
+
 
 
 
@@ -91,10 +96,6 @@ inline bool inField(int a, int b, int c, int d)
 	if (!Left(a,b,c)) swap(b,c);
 	return Left(a,b,d) && Left(b,c,d) && Left(c,a,d);
 }
-
-
-
-
 
 
 
@@ -145,32 +146,12 @@ inline void ReadInput(const char *localFileName) // 读入JSON
 
 
 
-
 inline int min3(int a, int b, int c){return (a<=b&&a<=c)?a:(b<=c?b:c);}
 inline int max3(int a, int b, int c){return (a>=b&&a>=c)?a:(b>=c?b:c);}
 
-char Level[maxs]; short int nx[maxs]; int Count[9];
+inline void Max(int &a, int b){if (b>a) a=b;}
 
-int LevelCal(int a, int b, int c)
-{
-	int LB=GetLB(a,b,c); SWAP(a,b,c);
-	if (Level[LB]) return (int)Level[LB]; else Level[LB]=1;
-	int x0=min3(P[a].lbx,P[b].lbx,P[c].lbx);
-	int x1=max3(P[a].lbx,P[b].lbx,P[c].lbx);
-	int y0=min3(P[a].lby,P[b].lby,P[c].lby);
-	int y1=max3(P[a].lby,P[b].lby,P[c].lby);
-	rep(i, x0, x1) rep(j, y0, y1) travel(i,j) if (p->v<c && inField(a,b,c,p->v))
-	{
-		int d=p->v, A=GetLB(a,b,d), B=GetLB(b,c,d), C=GetLB(c,a,d);
-		int tmp=min3(Level[A]?Level[A]:LevelCal(a,b,d),Level[B]?Level[B]:LevelCal(b,c,d),Level[C]?Level[C]:LevelCal(c,a,d))+1;
-		if (tmp>Level[LB]) Level[LB]=tmp, nx[LB]=d;
-	}
-	return (int)Level[LB];
-}
-
-
-
-
+char Level[maxs]; short int nx[maxs]; int Count[9]; int Lmx[maxn][maxn];
 
 
 
@@ -184,96 +165,6 @@ Json::Value bm, dt, ini_bm, null_dt;
 
 
 
-
-
-/* int n, tot, Total, QLevel, pid_cal[maxn][maxn], lv[maxs], nx[maxs], po[maxs], Count[9];
-double pretty[maxs];
-
-inline int min(int a, int b){return a<b?a:b;}
-
-inline double min3(double a, double b, double c){return (a<=b&&a<=c)?a:(b<=c?b:c);}
-
-inline double max3(double a, double b, double c){return (a>=b&&a>=c)?a:(b>=c?b:c);}
-
-inline double dis(int a, int b){return sqrt(pow(P[a].x-P[b].x,2) + pow(P[a].y-P[b].y,2));}
-
-inline double FieldS(int a, int b, int c)
-{
-	return fabs(P[a].x*P[b].y+P[b].x*P[c].y+P[c].x*P[a].y - P[a].y*P[b].x-P[b].y*P[c].x-P[c].y*P[a].x)/2;
-}
-
-inline double disL(int a, int b, int c){return FieldS(a,b,c)*2/dis(a,b);}
-
-inline double FangCha(double a, double b, double c)
-{
-	double sum=a+b+c; a=a/sum*3, b=b/sum*3, c=c/sum*3;
-	return (pow(a-1,2)+pow(b-1,2)+pow(c-1,2))/3;
-}
-
-inline double abc(double a, double b, double c)
-{
-	double sum=a+b+c; a=a/sum, b=b/sum, c=c/sum;
-	return max3(a,b,c)-min3(a,b,c);
-}
-
-inline double CalPretty(int a, int b, int c, int d)
-{
-	int r=FieldS(a,b,c)*2/(dis(a,d)+dis(b,d)+dis(c,d));
-	return (max3(dis(a,d),dis(b,d),dis(c,d))-min3(dis(a,d),dis(b,d),dis(c,d)))/r;
-}
-
-inline double Dir(int a, int b, int c)
-{
-	return (P[b].x-P[a].x)*(P[c].y-P[a].y)-(P[c].x-P[a].x)*(P[b].y-P[a].y);
-}
-
-inline bool inField(int a, int b, int c, int d)
-{
-	return Dir(a,b,d)*Dir(b,c,d)>0 && Dir(b,c,d)*Dir(c,a,d)>0;
-}
-
-inline int GetPID(int a, int b, int c){return pid_cal[a][b]+c-b;}
-
-int FieldLevel(int a, int b, int c)
-{
-	if (a>b) swap(a,b); if (b>c) swap(b,c); if (a>b) swap(a,b);
-	int x=GetPID(a,b,c), tmp, y; double mn=0, tmp2;
-	if (lv[x]) return lv[x]; tot++;
-	for(int ta=1, tb=a, tc=b, td=c; ta<tb; ta++) if (inField(a,b,c,ta))
-	{
-		po[x]++; tmp=9; tmp2=0;
-		y=GetPID(ta,tb,tc); if ((lv[y]?lv[y]:FieldLevel(ta,tb,tc))<lv[x]) continue; else tmp=min(tmp,lv[y]), tmp2+=pretty[y];
-		y=GetPID(ta,tb,td); if ((lv[y]?lv[y]:FieldLevel(ta,tb,td))<lv[x]) continue; else tmp=min(tmp,lv[y]), tmp2+=pretty[y];
-		y=GetPID(ta,tc,td); if ((lv[y]?lv[y]:FieldLevel(ta,tc,td))<lv[x]) continue; else tmp=min(tmp,lv[y]), tmp2+=pretty[y];
-		tmp2*=0.6; tmp2+=CalPretty(a,b,c,ta); if (tmp>lv[x] || (tmp==lv[x] && tmp2<mn)) lv[x]=tmp, nx[x]=ta, mn=tmp2;
-	}
-	for(int ta=a, tb=a+1, tc=b, td=c; tb<tc; tb++) if (inField(a,b,c,tb))
-	{
-		po[x]++; tmp=9; tmp2=0;
-		y=GetPID(ta,tb,tc); if ((lv[y]?lv[y]:FieldLevel(ta,tb,tc))<=lv[x]) continue; else tmp=min(tmp,lv[y]), tmp2+=pretty[y];
-		y=GetPID(ta,tb,td); if ((lv[y]?lv[y]:FieldLevel(ta,tb,td))<=lv[x]) continue; else tmp=min(tmp,lv[y]), tmp2+=pretty[y];
-		y=GetPID(tb,tc,td); if ((lv[y]?lv[y]:FieldLevel(tb,tc,td))<=lv[x]) continue; else tmp=min(tmp,lv[y]), tmp2+=pretty[y];
-		tmp2*=0.6; tmp2+=CalPretty(a,b,c,tb); if (tmp>lv[x] || (tmp==lv[x] && tmp2<mn)) lv[x]=tmp, nx[x]=tb, mn=tmp2;
-	}
-	for(int ta=a, tb=b, tc=b+1, td=c; tc<td; tc++) if (inField(a,b,c,tc))
-	{
-		po[x]++; tmp=9; tmp2=0;
-		y=GetPID(ta,tb,tc); if ((lv[y]?lv[y]:FieldLevel(ta,tb,tc))<=lv[x]) continue; else tmp=min(tmp,lv[y]), tmp2+=pretty[y];
-		y=GetPID(ta,tc,td); if ((lv[y]?lv[y]:FieldLevel(ta,tc,td))<=lv[x]) continue; else tmp=min(tmp,lv[y]), tmp2+=pretty[y];
-		y=GetPID(tb,tc,td); if ((lv[y]?lv[y]:FieldLevel(tb,tc,td))<=lv[x]) continue; else tmp=min(tmp,lv[y]), tmp2+=pretty[y];
-		tmp2*=0.6; tmp2+=CalPretty(a,b,c,tc); if (tmp>lv[x] || (tmp==lv[x] && tmp2<mn)) lv[x]=tmp, nx[x]=tc, mn=tmp2;
-	}
-	for(int ta=a, tb=b, tc=c, td=c+1; td<=n; td++) if (inField(a,b,c,td))
-	{
-		po[x]++; tmp=9; tmp2=0;
-		y=GetPID(ta,tb,td); if ((lv[y]?lv[y]:FieldLevel(ta,tb,td))<=lv[x]) continue; else tmp=min(tmp,lv[y]), tmp2+=pretty[y];
-		y=GetPID(ta,tc,td); if ((lv[y]?lv[y]:FieldLevel(ta,tc,td))<=lv[x]) continue; else tmp=min(tmp,lv[y]), tmp2+=pretty[y];
-		y=GetPID(tb,tc,td); if ((lv[y]?lv[y]:FieldLevel(tb,tc,td))<=lv[x]) continue; else tmp=min(tmp,lv[y]), tmp2+=pretty[y];
-		tmp2*=0.6; tmp2+=CalPretty(a,b,c,td); if (tmp>lv[x] || (tmp==lv[x] && tmp2<mn)) lv[x]=tmp, nx[x]=td, mn=tmp2;
-	}
-	
-	pretty[x]=mn; return ++lv[x];
-} */
 
 
 
@@ -345,6 +236,7 @@ inline void AddLine(int a, int b, int lv)
 	if (lv == 4) dt[OPtot]["color"] = "#6666ff";
 	if (lv == 5) dt[OPtot]["color"] = "#8888ff";
 	if (lv == 6) dt[OPtot]["color"] = "#aaaaff";
+	if (lv == 7) dt[OPtot]["color"] = "#ccccff";
 	
 	dt[OPtot]["latLngs"][0]["lat"] = D_toString(P[a].x0);
 	dt[OPtot]["latLngs"][0]["lng"] = D_toString(P[a].y0);
@@ -410,14 +302,16 @@ inline void OutputResult()
 	
 	priority_queue<F>q; int sz=0, tot=0, LB;
 	
-	/* rep(i, 1, n) rep(j, i+1, n) rep(k, j+1, n) if (Level[LB=GetLB(i,j,k)]>=QLevel)
+	rep(i, 1, n) rep(j, i+1, n) rep(k, j+1, n) if (Level[LB=GetLB(i,j,k)]>=QLevel)
 	{
 		if (sz==10) q.pop(), sz--;
 		q.push((F){LB,Area(i,j,k)}), sz++;
 		if (tot<=1000000) OPRandom[tot++]=LB;
 	}
 	
-	dow(i, sz, 1) printf("面积最小：#%d\n\n", i), OutputPlan(q.top().LB), q.pop(); */
+	dow(i, sz, 1) printf("面积最小：#%d\n\n", i), OutputPlan(q.top().v), q.pop();
+	
+	sz=0, tot=0;
 	
 	rep(i, 1, n) rep(j, i+1, n) rep(k, j+1, n) if (Level[LB=GetLB(i,j,k)]>=QLevel)
 	{
@@ -426,7 +320,7 @@ inline void OutputResult()
 		if (tot<=1000000) OPRandom[tot++]=LB;
 	}
 	
-	dow(i, sz, 1) printf("面积最大：#%d\n\n", i), OutputPlan(q.top().LB), q.pop();
+	dow(i, sz, 1) printf("面积最大：#%d\n\n", i), OutputPlan(q.top().v), q.pop();
 	
 	random_shuffle(OPRandom, OPRandom+tot);
 	rep(i, 1, min(tot,30)) printf("Random #%d\n\n", i), OutputPlan(OPRandom[i-1]);
@@ -458,23 +352,61 @@ int main()
 		getchar(); return 0;
 	}
 	
-	int GAP=(int)sqrt(n), Btot=0;
-	sort(P+1, P+1+n, cmpX); 
-	for(int st=0; Btot++,st<n; st+=GAP) rep(i, 1, GAP) if (st+i>n) break; else P[st+i].lbx=Btot;
-	Btot=0;
-	sort(P+1, P+1+n, cmpY); 
-	for(int st=0; Btot++,st<n; st+=GAP) rep(i, 1, GAP) if (st+i>n) break; else P[st+i].lby=Btot;
-	sort(P+1, P+1+n, cmpXY); 
-	rep(i, 1, n) pt->v=i, pt->n=fir[P[i].lbx][P[i].lby], fir[P[i].lbx][P[i].lby]=pt++;
+	sort(P+1, P+1+n, cmpXY);
 	
 	int tot=0; rep(i, 1, n-2) rep(j, i+1, n-1) tot+=n-j, pid_cal[i][j]=tot-n;
 	
-	int now=0;
-	rep(c, 1, n) dow(a, c-1, 1) rep(b, a+1, c-1) 
+	int now=0, totL, totR;
+	rep(c, 3, n) dow(a, c-2, 1)
 	{
-		Count[LevelCal(a,b,c)]++; now++;
-		if ((double)(clock()-gap)/CLOCKS_PER_SEC>=0.1)
-			system("cls"), printf("%.6lf%%", 100.0*now/tot), gap=clock();
+		totL=totR=0; 
+		rep(b, a+1, c-1) if (Left(a,c,b)) qL[++totL]=(F){b,Area(a,b,c)}; else qR[++totR]=(F){b,Area(a,c,b)};
+		if (totL)
+		{
+			sort(qL+1, qL+1+totL); clr(fir,0); pt=e;
+			rep(i, 1, totL)
+			{
+				int b=qL[i].v, LB=GetLB(a,b,c), mxLevel=min(Lmx[c][b],Lmx[b][a]); // Change
+				char &Lv=Level[LB]; Lv=1;
+				dow(o, mxLevel, 1) travel(o) if (Lv>o) break; else if (inField(a,b,c,p->v))
+				{
+					int tmp=min3(o,Level[GetLB(a,b,p->v)],Level[GetLB(b,c,p->v)])+1;
+					if (tmp>Lv) Lv=tmp, nx[LB]=p->v;
+				}
+				
+				int tmp=min3(Lv,Lmx[a][b],Lmx[b][c]); // Change;
+				pt->v=b, pt->n=fir[tmp], fir[tmp]=pt++;
+				
+				Max(Lmx[a][c],Lv); Max(Lmx[c][b],Lv); Max(Lmx[b][a],Lv); // Change
+				
+				Count[(int)Lv]++; now++;
+				//if ((double)(clock()-gap)/CLOCKS_PER_SEC>=0.1)
+				//	system("cls"), printf("%.6lf%%", 100.0*now/tot), gap=clock();
+			}
+		}
+		if (totR)
+		{
+			sort(qR+1, qR+1+totR); clr(fir,0); pt=e;
+			rep(i, 1, totR)
+			{
+				int b=qR[i].v, LB=GetLB(a,b,c), mxLevel=min(Lmx[a][b],Lmx[b][c]); // Change
+				char &Lv=Level[LB]; Lv=1;
+				dow(o, mxLevel, 1) travel(o) if (Lv>o) break; else if (inField(a,b,c,p->v))
+				{
+					int tmp=min3(o,Level[GetLB(a,b,p->v)],Level[GetLB(b,c,p->v)])+1;
+					if (tmp>Lv) Lv=tmp, nx[LB]=p->v;
+				}
+				
+				int tmp=min3(Lv,Lmx[c][b],Lmx[b][a]); // Change;
+				pt->v=b, pt->n=fir[tmp], fir[tmp]=pt++;
+				
+				Max(Lmx[a][b],Lv); Max(Lmx[b][c],Lv); Max(Lmx[c][a],Lv); // Change
+				
+				Count[(int)Lv]++; now++;
+				//if ((double)(clock()-gap)/CLOCKS_PER_SEC>=0.1)
+				//	system("cls"), printf("%.6lf%%", 100.0*now/tot), gap=clock();
+			}
+		}
 	}
 	
 	system("cls"); 
@@ -495,55 +427,3 @@ int main()
 
 
 
-
-
-
-
-
-/* inline void GetAvaliableArea(int LB, int a, int b, int c)
-{
-	Line A0=GetLine(a,b), A1=Adjust(A0,c);
-	Line B0=GetLine(b,c), B1=Adjust(B0,a);
-	Point tmp; double x_mn, x_mx, y_mn, y_mx;
-	tmp=CROSS(A0,B0); x_mn=x_mx=tmp.x; y_mn=y_mx=tmp.y;
-	tmp=CROSS(A0,B1); Min(x_mn,tmp.x); Max(x_mx,tmp.x); Min(y_mn,tmp.y); Max(y_mx,tmp.y);
-	tmp=CROSS(A1,B0); Min(x_mn,tmp.x); Max(x_mx,tmp.x); Min(y_mn,tmp.y); Max(y_mx,tmp.y);
-	tmp=CROSS(A1,B1); Min(x_mn,tmp.x); Max(x_mx,tmp.x); Min(y_mn,tmp.y); Max(y_mx,tmp.y);
-	int lbx_mn=1, lbx_mx=PortalBtot, lby_mn=1, lby_mx=PortalBtot;
-	while (Bx_mx[lbx_mn]<x_mn) lbx_mn++;
-	while (x_mx<Bx_mn[lbx_mx]) lbx_mx++;
-	while (By_mx[lby_mn]<y_mn) lby_mn++;
-	while (y_mx<By_mn[lby_mx]) lby_mx++;
-	rep(i, lbx_mn, lbx_mx) rep(j, lby_mn, lby_mx) travel(i,j)
-	{
-		int d=p->v;
-		if (InField(a,c,d,b)) Update(GetLB(a,c,d),b,min3(F[GetLB(a,b,c)],F[GetLB(a,b,d)],F[GetLB(d,b,c)])+1);
-	}
-} */
-
-	
-	/* for(int st=0; st<tot; st+=GAP)
-	{
-		Bst[++Btot]=st+1;
-		rep(i, 1, GAP) if (st+i>tot) break; else q0[i].LB=q[st+i], q0[i].S=Area(q[st+i]);
-		sort(q0+1, q0+(st+GAP>tot?tot-st:GAP), cmpS);
-		rep(i, 1, GAP) if (st+i>tot) break; else q[st+i]=q0[i].LB;
-	}
-	
-	priority_queue<F>q1;
-	
-	rep(i, 1, Btot) q1.push((F){i,Area(q[Bst[i]])});
-	
-	gap=clock(); rep(i, 1, tot)
-	{
-		F a=q1.top(); q1.pop(); 
-		int x=q[Bst[a.LB]++]; if (q[Bst[a.LB]] && Bst[a.LB]/GAP!=a.LB) q1.push((F){a.LB,Area(q[Bst[a.LB]])});
-		
-		int a,b,c; GetPortal(x,a,b,c); if (Left(a,b,c)) swap(b,c);
-		
-		if (!Level[x]) Level[x]=1; Count[Level[x]]++;
-		
-		GetAvaliableArea(x,a,b,c);
-		GetAvaliableArea(x,b,c,a);
-		GetAvaliableArea(x,c,a,b);
-	} */
