@@ -1,6 +1,6 @@
 *.exe
 act.txt
-Book1.xlsx
+*.xlsx
 bookmark.txt
 portal.txt
 result.txt

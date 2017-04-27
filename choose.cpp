@@ -325,6 +325,9 @@ inline void OutputResult()
 	random_shuffle(OPRandom, OPRandom+tot);
 	rep(i, 1, min(tot,30)) printf("Random #%d\n\n", i), OutputPlan(OPRandom[i-1]);
 	
+	printf("需要注意的重名 Po：\n");
+	rep(i, 1, n) rep(j, i+1, n) if (P[i].label == P[j].label) {cout << P[i].label << endl; break;}
+	
 	fclose(stdout);
 }
 
