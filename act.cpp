@@ -31,7 +31,7 @@ inline string toString(int a, int b)
 }
 
 int LB[500][500], F[500][3], LV, n;
-bool vis[500], InBook[500];
+bool vis[500], InBook[500], Pass[500];
 map<int,string> M0;
 map<string,int> M1;
 
@@ -133,7 +133,7 @@ inline void ReadWay(const char *localFileName) // 读入JSON
 	int sz=input[0]["latLngs"].size();
 	rep(i, 1, sz)
 	{
-		int x=FindLB(input[0]["latLngs"][i-1]["lat"].asDouble(), input[0]["latLngs"][i-1]["lng"].asDouble());
+		int x=FindLB(input[0]["latLngs"][i-1]["lat"].asDouble(), input[0]["latLngs"][i-1]["lng"].asDouble()); Pass[x]=true;
 		int key=0, out=0; rep(y, 1, n) if (InBook[y] && LB[x][y] && !vis[y]) key++; else if (InBook[y] && LB[x][y]) out++;
 		cout << M0[x] << '\t' << P[x].label << '\t' << key << '\t' << out << '\t';
 		rep(y, 1, n) if (InBook[y] && LB[x][y] && vis[y]) cout << M0[y] << ' ';
@@ -147,6 +147,8 @@ inline void ReadWay(const char *localFileName) // 读入JSON
 		}
 		vis[x]=1;
 	}
+	cout << endl;
+	rep(i, 1, n) if (InBook[i] && !Pass[i]) cout << M0[i] << " 未经过！" << endl;
 }
 
 int main()
