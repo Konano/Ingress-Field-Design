@@ -1,8 +1,6 @@
 # Ingress-Field-Design
 
-## 使用方法
-
-### 求解竹笋方案
+## 求解竹笋方案 - 使用方法
 
 1.在 IITC 平台上将大量 Portal（数量上限 1000）收藏至 Bookmarks 内并导出至 portal.txt
 
