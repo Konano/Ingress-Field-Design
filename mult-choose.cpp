@@ -20,7 +20,7 @@ using namespace std;
 typedef pair<double,int> Pdi;
 typedef long double ld;
 
-#define maxn 509
+#define maxn 1009
 
 struct Portal
 {
