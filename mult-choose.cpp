@@ -300,49 +300,55 @@ int main()
 	freopen("mult-result.txt", "w", stdout); AddLine(1,An+1);
 	
 	tot=0; rep(o, An+Bn+1, n) if (Left(1,An+1,o)) q[++tot]=Pdi(Area(1,An+1,o),o);
-	sort(q+1, q+1+tot);
-	rep(o, 1, tot)
+	if (tot)
 	{
-		f[q[o].se]=1;
-		rep(k, 1, o-1) if (f[q[o].se]<f[q[k].se]+1)
+		sort(q+1, q+1+tot);
+		rep(o, 1, tot)
 		{
-			bool fg=true;
-			//rep(j, An+1, An+Bn) if (Angle(j,q[o].se,q[k].se)>Angle(q[o].se,q[k].se,j)) {fg=false; goto BK;}
-			rep(i, 1, An) rep(j, An+1, An+Bn) if (!inField(i,j,q[o].se,q[k].se)) {fg=false; goto BK;}
-			BK:if (fg) f[q[o].se]=f[q[k].se]+1, nx[q[o].se]=q[k].se;
+			f[q[o].se]=1;
+			rep(k, 1, o-1) if (f[q[o].se]<f[q[k].se]+1)
+			{
+				bool fg=true;
+				//rep(j, An+1, An+Bn) if (Angle(j,q[o].se,q[k].se)>Angle(q[o].se,q[k].se,j)) {fg=false; goto BK;}
+				rep(i, 1, An) rep(j, An+1, An+Bn) if (!inField(i,j,q[o].se,q[k].se)) {fg=false; goto BK;}
+				BK:if (fg) f[q[o].se]=f[q[k].se]+1, nx[q[o].se]=q[k].se;
+			}
+			Ans=max(Ans, f[q[o].se]);
 		}
-		Ans=max(Ans, f[q[o].se]);
-	}
-	
-	rep(o, 1, n) if (f[o]==Ans)
-	{
-		AddPortal(o), AddLine(1,o), AddLine(An+1,o);
-		while (f[o]!=1) 
-			AddLine(o,nx[o]), o=nx[o], AddPortal(o), AddLine(1,o), AddLine(An+1,o);
-		break;
+		
+		rep(o, 1, n) if (f[o]==Ans)
+		{
+			AddPortal(o), AddLine(1,o), AddLine(An+1,o);
+			while (f[o]!=1) 
+				AddLine(o,nx[o]), o=nx[o], AddPortal(o), AddLine(1,o), AddLine(An+1,o);
+			break;
+		}
 	}
 	
 	tot=Ans=0; clr(f,0); rep(o, An+Bn+1, n) if (Left(An+1,1,o)) q[++tot]=Pdi(Area(1,An+1,o),o);
-	sort(q+1, q+1+tot);
-	rep(o, 1, tot)
+	if (tot)
 	{
-		f[q[o].se]=1;
-		rep(k, 1, o-1) if (f[q[o].se]<f[q[k].se]+1)
+		sort(q+1, q+1+tot);
+		rep(o, 1, tot)
 		{
-			bool fg=true;
-			//rep(j, An+1, An+Bn) if (Angle(j,q[o].se,q[k].se)>Angle(q[o].se,q[k].se,j)) {fg=false; goto BK2;}
-			rep(i, 1, An) rep(j, An+1, An+Bn) if (!inField(i,j,q[o].se,q[k].se)) {fg=false; goto BK2;}
-			BK2:if (fg) f[q[o].se]=f[q[k].se]+1, nx[q[o].se]=q[k].se;
+			f[q[o].se]=1;
+			rep(k, 1, o-1) if (f[q[o].se]<f[q[k].se]+1)
+			{
+				bool fg=true;
+				//rep(j, An+1, An+Bn) if (Angle(j,q[o].se,q[k].se)>Angle(q[o].se,q[k].se,j)) {fg=false; goto BK2;}
+				rep(i, 1, An) rep(j, An+1, An+Bn) if (!inField(i,j,q[o].se,q[k].se)) {fg=false; goto BK2;}
+				BK2:if (fg) f[q[o].se]=f[q[k].se]+1, nx[q[o].se]=q[k].se;
+			}
+			Ans=max(Ans, f[q[o].se]);
 		}
-		Ans=max(Ans, f[q[o].se]);
-	}
-	
-	rep(o, 1, n) if (f[o]==Ans)
-	{
-		AddPortal(o), AddLine(1,o), AddLine(An+1,o);
-		while (f[o]!=1) 
-			AddLine(o,nx[o]), o=nx[o], AddPortal(o), AddLine(1,o), AddLine(An+1,o);
-		break;
+		
+		rep(o, 1, n) if (f[o]==Ans)
+		{
+			AddPortal(o), AddLine(1,o), AddLine(An+1,o);
+			while (f[o]!=1) 
+				AddLine(o,nx[o]), o=nx[o], AddPortal(o), AddLine(1,o), AddLine(An+1,o);
+			break;
+		}
 	}
 	
 	Json::FastWriter writer;
