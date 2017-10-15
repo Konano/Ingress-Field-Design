@@ -1,25 +1,39 @@
 # Ingress-Field-Design
 
-## 求解竹笋方案 - 使用方法
+## 求解竹笋方案及规划
 
-1.在 IITC 平台上将大量 Portal（数量上限 1000）收藏至 Bookmarks 内
+0. 首先你得会使用 IITC 以及 drawtool & bookmark 插件
+1. 在 IITC 平台上将大量 Portal（数量上限 1000）收藏至 Bookmarks 内（可使用  Portal List 插件或 [这个插件](https://github.com/hayeswise/iitc-portalsinpolygons) 节省时间）
+2. 下载 [这个东西](https://github.com/Konano/Ingress-Field-Design/raw/master/mille-feuille_field.zip) 并解压
+3. 将 bookmark 信息导出至 `portal.txt`
+4. 运行 `choose.exe`，程序读取 Portal 信息后显示倒数第二个 Portal 的名称，此时回车
+5. 待计算完成后输入你所需要的竹笋重数并回车
+6. 待程序退出后即可在 `result.txt` 找到有关方案的 bookmark 和 drawtool 信息
 
-2.将 bookmark 信息导出至 `portal.txt`
+## 单人竹笋路径规划
 
-3.运行 `choose.exe`，程序读取 Portal 信息后显示倒数第二个 Portal 的名称，此时回车
+0. 首先你已经使用了上面提供的竹笋规划程序
+1. 下载 [这个东西](https://github.com/Konano/Ingress-Field-Design/raw/master/mille-feuille_field.zip) 并解压到同个目录下
+2. 复制你所选定的方案的 bookmark 信息，并粘贴于 `bookmark.txt` 内
+3. 用 draw 工具在 IITC 上画出一条路径，要求路径必须经过方案内全部点正好一次
+4. 将 drawtool 信息导出到 `way.txt`（可参照 `way-sample.txt`）
+5. 运行 `act.exe`
+6. 打开 `act.txt`，看文件末尾是否有错误提示（A 必须比 B,C,D 三个中的任意一个先经过）有的话修改路径并回到步骤 4，没有的话 `act.txt` 就是方案了
 
-4.待计算完成后输入你所需要的竹笋重数并回车
+## 求解单顶点多重方案及规划
 
-5.待程序退出后即可在目录下的 `result.txt` 找到有关方案的 bookmark 和 drawtool 信息
+0. 首先你得会使用 IITC 以及 drawtool & bookmark 插件
+1. 下载 [这个东西](https://github.com/Konano/Ingress-Field-Design/raw/master/mult_field.zip) 并解压
+2. 将 `mult-portal-sample.txt` 导入到 IITC 平台中
+3. 将固定顶点收藏于 Bookmark 内的文件夹 A 中，将打算毒完重连的顶点集合收藏于文件夹 B 中，将大量中轴线候补 Portal 收藏至 Bookmark 内的默认文件夹（总 Portal 数上限 1000）
+4. 将 bookmark 信息导出至 `portal.txt`
+5. 运行 `mult-choose.exe`，程序读取 Portal 信息后显示倒数第二个 Portal 的名称，此时回车
+6. 待程序退出后即可在 `mult-result.txt` 找到有关方案的 bookmark 和 drawtool 信息
 
-## 求解单顶点多重 - 使用方法
+---
 
-1.将 `portal-mult-sample.txt` 导入到 IITC 平台中
+## 尚未填的坑
 
-2.将固定顶点收藏于 Bookmark 内的文件夹 A 中，将打算毒完重连的顶点集合收藏于文件夹 B 中，将大量中轴线候补 Portal 收藏至 Bookmark 内的默认文件夹（总 Portal 数上限 1000）
-
-3.将 bookmark 信息导出至 `portal.txt`
-
-4.运行 `mult-choose.exe`，程序读取 Portal 信息后显示倒数第二个 Portal 的名称，此时回车
-
-5.待程序退出后即可在目录下的 `mult-result.txt` 找到有关方案的 bookmark 和 drawtool 信息
+1. Mac & Linux 版
+2. “一键收藏”插件的编写
+3. 单人竹笋路径规划
