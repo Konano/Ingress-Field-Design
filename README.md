@@ -13,7 +13,7 @@
 ## 单人竹笋路径规划
 
 0. 首先你已经使用了上面提供的竹笋规划程序
-1. 下载 [这个东西](https://github.com/Konano/Ingress-Field-Design/raw/master/mille-feuille_field.zip) 并解压到同个目录下
+1. 下载 [这个东西](https://github.com/Konano/Ingress-Field-Design/raw/master/act.zip) 并解压到同个目录下
 2. 复制你所选定的方案的 bookmark 信息，并粘贴于 `bookmark.txt` 内
 3. 用 draw 工具在 IITC 上画出一条路径，要求路径必须经过方案内全部点正好一次
 4. 将 drawtool 信息导出到 `way.txt`（可参照 `way-sample.txt`）
