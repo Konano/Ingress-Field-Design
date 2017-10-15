@@ -31,8 +31,6 @@
 5. 运行 `mult-choose.exe`，程序读取 Portal 信息后显示倒数第二个 Portal 的名称，此时回车
 6. 待程序退出后即可在 `mult-result.txt` 找到有关方案的 bookmark 和 drawtool 信息
 
----
-
 ## 尚未填的坑
 
 1. Mac & Linux 版
