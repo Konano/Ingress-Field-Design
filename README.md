@@ -9,11 +9,11 @@
 
 2. 下载 [这个东西](https://github.com/Konano/Ingress-Field-Design/raw/master/mille-feuille_field.zip) 并解压
 3. 将 bookmark 信息导出至 `portal.txt`
-4. 运行 `choose.exe`（Mac 用户可运行 `choose`，Linux 用户自行编译`choose.cpp`（删掉`system("cls")`）），程序读取 Portal 信息后显示倒数第二个 Portal 的名称，此时回车
+4. 运行 `choose.exe`（Mac 用户可运行 `choose`，Linux 用户自行编译`choose.cpp`（删掉 `system("cls")`）），程序读取 Portal 信息后显示倒数第二个 Portal 的名称，此时回车
 5. 待计算完成后输入你所需要的竹笋重数并回车
 6. 待程序退出后即可在 `result.txt` 找到有关方案的 bookmark 和 drawtool 信息
 
-[注]：1、2步也可用`portals2json.js`直接导出（不需要放到收藏夹中）
+[注]：1、2步也可用 `portals2json.js` 直接导出（不需要放到收藏夹中）
 
 ## 单人竹笋路径规划
 
@@ -38,4 +38,4 @@
 
 ## 尚未填的坑
 
-1. Mac & Linux 版
+1. Linux 版
