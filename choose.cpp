@@ -388,7 +388,7 @@ int main()
 				
 				Count[(int)Lv]++; now++;
 				if ((double)(clock()-gap)/CLOCKS_PER_SEC>=0.1)
-					system("cls"), printf("%.6lf%%", 100.0*now/tot), gap=clock(); // 每隔 0.1s 显示一次百分比进度
+					system("cls"), printf("%.6lf%%\n", 100.0*now/tot), gap=clock(); // 每隔 0.1s 显示一次百分比进度
 			}
 		}
 		if (totR) // 注释同上
@@ -412,7 +412,7 @@ int main()
 				
 				Count[(int)Lv]++; now++;
 				if ((double)(clock()-gap)/CLOCKS_PER_SEC>=0.1)
-					system("cls"), printf("%.6lf%%", 100.0*now/tot), gap=clock();
+					system("cls"), printf("%.6lf%%\n", 100.0*now/tot), gap=clock();
 			}
 		}
 	}
