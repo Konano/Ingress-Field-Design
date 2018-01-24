@@ -566,7 +566,7 @@ plugin_info.pluginId = 'wise-portalsinpolygons';
             latlng: String(window.plugin.portalslist.listPortals[idx].portal._latlng.lat) + "," + String(window.plugin.portalslist.listPortals[idx].portal._latlng.lng),
             label: window.plugin.portalslist.listPortals[idx].sortValues[1],
           }
-          node.portals.idOthers.bkmrk[String(window.plugin.portalslist.listPortals[idx].sortValues[0])] = tee;
+          node.portals.idOthers.bkmrk[String(tee.latlng)] = tee;
         }
         // console.log('============');
         // console.log(JSON.stringify(node));
