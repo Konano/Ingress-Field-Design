@@ -1,6 +1,7 @@
 #include <cstdio>
 #include <algorithm>
 #include <sstream>
+#include <cmath>
 #include <string>
 #include <iostream>
 #include <fstream>
