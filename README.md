@@ -9,6 +9,6 @@
 
 ## 尚未填的坑
 
-- [ ] Linux 版
+- [x] Linux 版
 - [ ] MacOS 版
 - [ ] 对于个别 Portal 有大量 Key 的解决方案
