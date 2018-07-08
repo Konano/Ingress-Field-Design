@@ -4,7 +4,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
-#include "jsoncpp/json.h"
+#include "../jsoncpp/json.h"
 
 #define rep(i, l, r) for(int i=l; i<=r; i++)
 #define dow(i, l, r) for(int i=l; i>=r; i--)
@@ -92,7 +92,7 @@ inline void ChangetoPosition(int a)
 inline void ReadInput(const char *localFileName) // 读入JSON
 {
 	string str, chunk;
-	
+
 	if (localFileName)
 	{
 		ifstream fin(localFileName);
@@ -105,11 +105,11 @@ inline void ReadInput(const char *localFileName) // 读入JSON
 	}
 	else
 		while (getline(cin, chunk) && chunk != "") str += chunk;
-	
+
 	Json::Reader reader;
 	Json::Value input;
 	reader.parse(str, input);
-	
+
 	Json::Value::Members arrayMember = input["portals"]["idOthers"]["bkmrk"].getMemberNames();
 	for(Json::Value::Members::iterator iter = arrayMember.begin(); iter != arrayMember.end(); ++iter)
 	{
@@ -164,7 +164,7 @@ inline void AddLine(int a, int b)
 	dt[Ltot]["latLngs"][1]["lng"] = D_toString(P[b].y0);
 	dt[Ltot]["color"] = "#0099FF";
 	dt[Ltot]["type"] = "polyline";
-	
+
 	Ltot++;
 }
 
@@ -173,7 +173,7 @@ inline void AddPortal(int a)
 	bm["portals"]["idOthers"]["bkmrk"][I_toString(Ptot)]["guid"] = P[a].guid;
 	bm["portals"]["idOthers"]["bkmrk"][I_toString(Ptot)]["latlng"] = P[a].latlng;
 	bm["portals"]["idOthers"]["bkmrk"][I_toString(Ptot)]["label"] = P[a].label;
-	
+
 	Ptot++;
 }
 
@@ -190,15 +190,15 @@ inline void AddPortal(int a)
 inline void OutputResult()
 {
 	freopen("baf-result.txt", "w", stdout);
-	
+
 	AddLine(1,2); AddPortal(1); AddPortal(2);
-	
+
 	while (Ans) AddLine(Ans,1), AddLine(Ans,2), AddPortal(Ans), Ans=nx[Ans];
-	
+
 	Json::FastWriter writer;
 	puts("Bookmarks JSON:"); cout << writer.write(bm) << endl;
 	puts("DrawTools JSON:"); cout << writer.write(dt) << endl;
-	
+
 	fclose(stdout);
 }
 
@@ -216,28 +216,28 @@ inline void OutputResult()
 int main()
 {
 	ReadInput("portal.txt");
-	
+
 	system("cls"); printf("总点数：%d\n倒数第二个 Portal：", n); cout << P[n-1].label << endl;
 	getchar();
-	
+
 	if (n>maxn-9)
 	{
 		puts("点数过多，请删减。");
 		getchar(); return 0;
 	}
-	
+
 	rep(i, 3, n) P[i].S=Area(1,2,i);
 	sort(P+1, P+1+n, cmpS);
-	
+
 	Ans=0; rep(i, 3, n)
 	{
 		Level[i]=1, nx[i]=0;
 		rep(j, 3, i-1) if (inField(1,2,i,j) && Level[i]<Level[j]+1) Level[i]=Level[j]+1, nx[i]=j;
 		if (!Ans || Level[Ans]<Level[i]) Ans=i;
 	}
-	
+
 	OutputResult();
-	
+
 	return 0;
 }
 

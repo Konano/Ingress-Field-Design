@@ -5,7 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include <ctime>
-#include "jsoncpp/json.h"
+#include "../jsoncpp/json.h"
 
 #define rep(i, l, r) for(int i=l; i<=r; i++)
 #define dow(i, l, r) for(int i=l; i>=r; i--)
@@ -59,7 +59,7 @@ inline void ChangetoPosition(int a)
 inline void ReadInput(const char *localFileName) // 读入JSON
 {
 	string str, chunk;
-	
+
 	if (localFileName)
 	{
 		ifstream fin(localFileName);
@@ -72,11 +72,11 @@ inline void ReadInput(const char *localFileName) // 读入JSON
 	}
 	else
 		while (getline(cin, chunk) && chunk != "") str += chunk;
-	
+
 	Json::Reader reader;
 	Json::Value input;
 	reader.parse(str, input);
-	
+
 	Json::Value::Members arrayMember = input["portals"]["idOthers"]["bkmrk"].getMemberNames();
 	for(Json::Value::Members::iterator iter = arrayMember.begin(); iter != arrayMember.end(); ++iter)
 	{
@@ -116,23 +116,23 @@ inline string I_toString(int a)
 /* inline void AddField(int a, int b, int c)
 {
 	dt[tot]["color"] = "#0099FF";
-	
+
 	dt[tot]["latLngs"][0]["lat"] = D_toString(P[a].x);
 	dt[tot]["latLngs"][0]["lng"] = D_toString(P[a].y);
 	dt[tot]["latLngs"][1]["lat"] = D_toString(P[b].x);
 	dt[tot]["latLngs"][1]["lng"] = D_toString(P[b].y);
 	dt[tot]["latLngs"][2]["lat"] = D_toString(P[c].x);
 	dt[tot]["latLngs"][2]["lng"] = D_toString(P[c].y);
-	
+
 	dt[tot]["type"] = "polygon";
-	
+
 	tot++;
 } */
 
 inline void AddField(int a, int b, int c)
 {
 	dt[tot]["color"] = "#0099FF";
-	
+
 	dt[tot]["latLngs"][0]["lat"] = D_toString(P[a].x);
 	dt[tot]["latLngs"][0]["lng"] = D_toString(P[a].y);
 	dt[tot]["latLngs"][1]["lat"] = D_toString(P[b].x);
@@ -141,9 +141,9 @@ inline void AddField(int a, int b, int c)
 	dt[tot]["latLngs"][2]["lng"] = D_toString(P[c].y);
 	dt[tot]["latLngs"][3]["lat"] = D_toString(P[a].x);
 	dt[tot]["latLngs"][3]["lng"] = D_toString(P[a].y);
-	
+
 	dt[tot]["type"] = "polyline";
-	
+
 	tot++;
 }
 
@@ -158,9 +158,9 @@ inline void AddPortal(int a, int dir)
 void OutputPlan(int a, int b, int c, int dir)
 {
 	int x=GetPID(a,b,c);
-	
+
 	AddPortal(a,dir), AddField(a,b,c);
-	
+
 	if (lv[x]==1)
 		AddPortal(b,(dir+1)%3), AddPortal(c,(dir+2)%3);
 	else
@@ -170,7 +170,7 @@ void OutputPlan(int a, int b, int c, int dir)
 inline void OutputResult(int a, int b, int c)
 {
 	freopen("tri-result.txt", "w", stdout);
-	
+
 	string tmp1="A", tmp2="Group 0";
 	rep(i, 1, 3)
 	{
@@ -178,41 +178,41 @@ inline void OutputResult(int a, int b, int c)
 		bm["portals"][tmp1]["label"]=tmp2;
 		bm["portals"][tmp1]["state"]=0;
 	}
-	
+
 	tot=0; OutputPlan(a,b,c,0);
-	
+
 	Json::FastWriter writer;
 	puts("Bookmarks JSON:"); cout << writer.write(bm) << endl;
 	puts("DrawTools JSON:"); cout << writer.write(dt) << endl;
-	
+
 	printf("可能搞混的重复 Po 名：\n");
 	rep(i, 1, n) rep(j, i+1, n) if (P[i].label == P[j].label) cout << P[i].label << endl;
-	
+
 	fclose(stdout);
 }
 
 int main()
 {
 	ReadInput("portal.txt"); srand(time(NULL));
-	
+
 	Total=n*(n-1)*(n-2);
-	
+
 	printf("总点数：%d\n倒数第二个 Portal：", n); cout << P[n-1].label << endl;
 	getchar(); system("cls");
-	
+
 	if (n>400)
 	{
 		puts("点数过多，请删减。");
 		getchar(); return 0;
 	}
-	
+
 	int Pa, Pb, Pc, mx=0;
-	
-	gap=clock(); tot=0; 
-	rep(i, 1, n) rep(j, 1, n) if (i!=j) rep(k, 1, n) if (k!=i && k!=j) if (mx<FieldLevel(i,j,k)) 
+
+	gap=clock(); tot=0;
+	rep(i, 1, n) rep(j, 1, n) if (i!=j) rep(k, 1, n) if (k!=i && k!=j) if (mx<FieldLevel(i,j,k))
 		Pa=i, Pb=j, Pc=k, mx=FieldLevel(i,j,k);
-	
+
 	OutputResult(Pa, Pb, Pc);
-	
+
 	return 0;
 }

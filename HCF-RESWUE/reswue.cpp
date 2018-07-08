@@ -7,7 +7,7 @@
 #include <map>
 #include <vector>
 #include <iomanip>
-#include "jsoncpp/json.h"
+#include "../jsoncpp/json.h"
 
 #define rep(i, l, r) for(int i=l; i<=r; i++)
 #define dow(i, l, r) for(int i=l; i>=r; i--)
@@ -44,12 +44,12 @@ inline void GetOpinion()
 	M0[++n]="A2", M1["A2"]=n, Lv[n]=1;
 	M0[++n]="A3", M1["A3"]=n, Lv[n]=1;
 	Add(1,2); Add(2,3); Add(1,3);
-	
-	ifstream fin("label.txt"); 
+
+	ifstream fin("label.txt");
 	int tmp, num=0; fin >> tmp; for(int i=1, a=1; i<tmp; i++) num+=a, a*=3;
-	
+
 	string a, b, c, d;
-	rep(i, 1, num) 
+	rep(i, 1, num)
 	{
 		fin >> a >> b >> c >> d;
 		M0[++n]=a, M1[a]=n, Lv[n]=max(max(Lv[M1[b]],Lv[M1[c]]),Lv[M1[d]])+1;
@@ -69,7 +69,7 @@ inline void ChangetoPosition(int a)
 inline void ReadBookmark(const char *localFileName) // ¶ÁÈëJSON
 {
 	string str, chunk;
-	
+
 	if (localFileName)
 	{
 		ifstream fin(localFileName);
@@ -82,11 +82,11 @@ inline void ReadBookmark(const char *localFileName) // ¶ÁÈëJSON
 	}
 	else
 		while (getline(cin, chunk) && chunk != "") str += chunk;
-	
+
 	Json::Reader reader;
 	Json::Value input;
 	reader.parse(str, input);
-	
+
 	Json::Value::Members arrayMember1 = input["portals"].getMemberNames();
 	for(Json::Value::Members::iterator iter1 = arrayMember1.begin(); iter1 != arrayMember1.end(); ++iter1)
 	{
@@ -117,19 +117,19 @@ inline string LayerName(int x)
 inline int Step(int a, int b)
 {
 	if (Lv[a]==5 && Lv[b]==6) return 1;
-	
+
 	if (Lv[a]==4 && Lv[b]==5) return 1;
 	if (Lv[a]==4 && Lv[b]==6) return 1;
 	if (Lv[a]==4 && Lv[b]==2) return 1;
-	
+
 	if (Lv[a]==3 && Lv[b]==4) return 2;
 	if (Lv[a]==3 && Lv[b]==5) return 2;
 	if (Lv[a]==3 && Lv[b]==6) return 2;
 	if (Lv[a]==3 && Lv[b]==2) return 2;
-	
+
 	if (Lv[a]==2 && Lv[b]==5) return 3;
 	if (Lv[a]==2 && Lv[b]==6) return 3;
-	
+
 	if (Lv[a]==1 && Lv[b]==1 && (a+1==b || a-2==b)) return 4;
 	if (Lv[a]==1 && Lv[b]==2) return 4;
 	if (Lv[a]==1 && Lv[b]==3) return 4;
@@ -159,14 +159,14 @@ int pt_num, lk_num, dt_num=4, dtn[19];
 inline void AddLine(int o, int a, int b)
 {
 	dt[o][dtn[o]]["color"] = "#0000ff";
-	
+
 	dt[o][dtn[o]]["latLngs"][0]["lat"] = D_toString(P[a].x);
 	dt[o][dtn[o]]["latLngs"][0]["lng"] = D_toString(P[a].y);
 	dt[o][dtn[o]]["latLngs"][1]["lat"] = D_toString(P[b].x);
 	dt[o][dtn[o]]["latLngs"][1]["lng"] = D_toString(P[b].y);
-	
+
 	dt[o][dtn[o]]["type"] = "polyline";
-	
+
 	dtn[o]++;
 }
 
@@ -182,7 +182,7 @@ inline void OutputRESWUE()
 		wue["Portals"][pt_num]["lng"] = D_toString(P[x].y);
 		pt_num++;
 	}
-	rep(x, 1, n) if (InBook[x]) rep(i, 0, (int)v[x].size()-1) 
+	rep(x, 1, n) if (InBook[x]) rep(i, 0, (int)v[x].size()-1)
 		if (InBook[v[x][i]] && Step(x,v[x][i])>=0)
 	{
 		wue["Links"][lk_num]["id"] = I_toString(lk_num+1);
@@ -196,16 +196,16 @@ inline void OutputRESWUE()
 		wue["Links"][lk_num]["portal2Lng"] = D_toString(P[v[x][i]].y);
 		wue["Links"][lk_num]["type"] = LayerName(Step(x,v[x][i]));
 		lk_num++;
-		
+
 		rep(o, Step(x,v[x][i]), dt_num) AddLine(o, x, v[x][i]);
 	}
-	
+
 	freopen("reswue.txt", "w", stdout);
-	
+
 	Json::FastWriter writer;
 	cout << writer.write(wue) << endl;
 	rep(i, 1, dt_num) cout << writer.write(dt[i]) << endl;
-	
+
 	fclose(stdout);
 }
 
@@ -213,7 +213,6 @@ int main()
 {
 	GetOpinion();
 	ReadBookmark("bookmark.txt");
-	//ReadWay("way.txt");
 	OutputRESWUE();
 	return 0;
 }

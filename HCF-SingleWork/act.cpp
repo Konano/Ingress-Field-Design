@@ -7,7 +7,7 @@
 #include <map>
 #include <vector>
 #include <iomanip>
-#include "jsoncpp/json.h"
+#include "../jsoncpp/json.h"
 
 #define rep(i, l, r) for(int i=l; i<=r; i++)
 #define dow(i, l, r) for(int i=l; i>=r; i--)
@@ -44,15 +44,15 @@ inline void GetOpinion()
 	M0[++n]="A2", M1["A2"]=n;
 	M0[++n]="A3", M1["A3"]=n;
 	Add(1,2); Add(2,3); Add(1,3);
-	
-	ifstream fin("label.txt"); 
+
+	ifstream fin("label.txt");
 	int tmp, num=0; fin >> tmp; for(int i=1, a=1; i<tmp; i++) num+=a, a*=3;
-	
+
 	string a, b, c, d;
-	rep(i, 1, num) 
+	rep(i, 1, num)
 	{
 		fin >> a >> b >> c >> d;
-		M0[++n]=a, M1[a]=n; 
+		M0[++n]=a, M1[a]=n;
 		Add(n,F[n][0]=M1[b]);
 		Add(n,F[n][1]=M1[c]);
 		Add(n,F[n][2]=M1[d]);
@@ -70,7 +70,7 @@ inline void ChangetoPosition(int a)
 inline void ReadBookmark(const char *localFileName) // 读入JSON
 {
 	string str, chunk;
-	
+
 	if (localFileName)
 	{
 		ifstream fin(localFileName);
@@ -83,11 +83,11 @@ inline void ReadBookmark(const char *localFileName) // 读入JSON
 	}
 	else
 		while (getline(cin, chunk) && chunk != "") str += chunk;
-	
+
 	Json::Reader reader;
 	Json::Value input;
 	reader.parse(str, input);
-	
+
 	Json::Value::Members arrayMember1 = input["portals"].getMemberNames();
 	for(Json::Value::Members::iterator iter1 = arrayMember1.begin(); iter1 != arrayMember1.end(); ++iter1)
 	{
@@ -110,7 +110,7 @@ inline int FindLB(double x, double y)
 inline void ReadWay(const char *localFileName) // 读入JSON
 {
 	string str, chunk;
-	
+
 	if (localFileName)
 	{
 		ifstream fin(localFileName);
@@ -123,20 +123,20 @@ inline void ReadWay(const char *localFileName) // 读入JSON
 	}
 	else
 		while (getline(cin, chunk) && chunk != "") str += chunk;
-	
+
 	Json::Reader reader;
 	Json::Value input;
 	reader.parse(str, input);
-	
+
 	freopen("act.txt", "w", stdout);
-	
+
 	rep(i, 1, n) if (InBook[i]) cout << M0[i] << '\t' << P[i].label << '\t' << P[i].latlng << endl;
 	cout << "\n\tPortal\tKeys\tOutLinks\n";
-	
+
 	int L=input[0]["latLngs"].size(); rep(o, 1, L)
 	{
 		int x=FindLB(input[0]["latLngs"][o-1]["lat"].asDouble(),input[0]["latLngs"][o-1]["lng"].asDouble());
-		if (!x) 
+		if (!x)
 		{
 			cout << endl << "路线出现问题，需要修改！！！！！！！！！！！！" << endl;
 			cout << "坐标：" << setiosflags(ios::fixed) << setprecision(6) << input[0]["latLngs"][o-1]["lat"].asDouble() << ',' << input[0]["latLngs"][o-1]["lng"].asDouble() << endl;
@@ -149,14 +149,14 @@ inline void ReadWay(const char *localFileName) // 读入JSON
 			cout << "<" << P[x].label << "> 重复经过两次！" << endl;
 			fclose(stdout); return;
 		}
-		
-		int key=0, out=0; 
-		rep(i, 0, (int)v[x].size()-1) if (!InBook[v[x][i]]) 
+
+		int key=0, out=0;
+		rep(i, 0, (int)v[x].size()-1) if (!InBook[v[x][i]])
 			v[x][i--]=v[x][(int)v[x].size()-1], v[x].pop_back();
 		else if (!vis[v[x][i]]) key++; else out++;
-		
+
 		cout << M0[x] << '\t' << P[x].label << '\t' << key << '\t' << out << '\t';
-		
+
 		sort(all(v[x])); bool fg=false;
 		rep(i, 0, (int)v[x].size()-1) if (InBook[v[x][i]] && vis[v[x][i]])
 		{
@@ -165,7 +165,7 @@ inline void ReadWay(const char *localFileName) // 读入JSON
 			fg=true;
 		}
 		cout << endl;
-		
+
 		if (vis[F[x][0]] && vis[F[x][1]] && vis[F[x][2]])
 		{
 			cout << endl << "啊路线出现问题，需要修改！！！！！！！！！！！！" << endl;
@@ -174,14 +174,14 @@ inline void ReadWay(const char *localFileName) // 读入JSON
 		}
 		vis[x]=1;
 	}
-	
+
 	rep(i, 1, n) if (InBook[i] && !vis[i])
 	{
 		cout << endl << "啊路线出现问题，需要修改！！！！！！！！！！！！" << endl;
 		cout << "<" << P[i].label << "> 未经过！" << endl;
 		fclose(stdout); return;
 	}
-	
+
 	fclose(stdout);
 }
 

@@ -1,7 +1,7 @@
-bookmark.txt
-portal.txt
-result.txt
-way.txt
-act.txt
-mult-result.txt
+*bookmark.txt
+*portal.txt
+*result.txt
+*way.txt
+*act.txt
 *.exe
+release
