@@ -10,5 +10,5 @@
 ## 尚未填的坑
 
 - [x] Linux 版
-- [ ] MacOS 版
-- [ ] 对于个别 Portal 有大量 Key 的解决方案
+- [x] MacOS 版
+- [x] 对于个别 Portal 有大量 Key 的解决方案
