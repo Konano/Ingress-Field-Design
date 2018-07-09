@@ -1,5 +1,5 @@
 #include <cstdio>
-//#include <cmath>
+#include <cmath>
 #include <algorithm>
 #include <sstream>
 #include <string>
@@ -370,9 +370,9 @@ inline void OutputResult()
 	tot=0;
 	MK(i, ii, 1) nMK(j, jj, 1) nMK(k, kk, jj+1) if (Level[FieldLabel=GetFL(i,j,k)]>=QLevel) nMK(h, hh, 1)
 	 	if (h!=i && h!=j && h!=k && inField(i,j,k,h) &&
-			Level[FieldLabel=GetFL(i,j,h)]>=QLevel-1 &&
-			Level[FieldLabel=GetFL(i,h,k)]>=QLevel-1 &&
-			Level[FieldLabel=GetFL(h,j,k)]>=QLevel-1)
+			Level[GetFL(i,j,h)]>=QLevel-1 &&
+			Level[GetFL(i,h,k)]>=QLevel-1 &&
+			Level[GetFL(h,j,k)]>=QLevel-1)
 		{
 			if ((int)qmin.size()==minField) qmin.pop();
 			qmin.push((Field){FieldLabel,Area(i,j,k)});
@@ -382,9 +382,9 @@ inline void OutputResult()
 		}
 	nMK(i, ii, 1) nMK(j, jj, ii+1) nMK(k, kk, jj+1) if (Level[FieldLabel=GetFL(i,j,k)]>=QLevel) MK(h, hh, 1)
 	 	if (h!=i && h!=j && h!=k && inField(i,j,k,h) &&
-			Level[FieldLabel=GetFL(i,j,h)]>=QLevel-1 &&
-			Level[FieldLabel=GetFL(i,h,k)]>=QLevel-1 &&
-			Level[FieldLabel=GetFL(h,j,k)]>=QLevel-1)
+			Level[GetFL(i,j,h)]>=QLevel-1 &&
+			Level[GetFL(i,h,k)]>=QLevel-1 &&
+			Level[GetFL(h,j,k)]>=QLevel-1)
 		{
 			if ((int)qmin.size()==minField) qmin.pop();
 			qmin.push((Field){FieldLabel,Area(i,j,k)});
@@ -406,9 +406,9 @@ inline void OutputResult()
 	tot=0;
 	MK(i, ii, 1) MK(j, jj, ii+1) nMK(k, kk, 1) if (Level[FieldLabel=GetFL(i,j,k)]>=QLevel) nMK(h, hh, 1)
 	 	if (h!=i && h!=j && h!=k && inField(i,j,k,h) &&
-			Level[FieldLabel=GetFL(i,j,h)]>=QLevel-1 &&
-			Level[FieldLabel=GetFL(i,h,k)]>=QLevel-1 &&
-			Level[FieldLabel=GetFL(h,j,k)]>=QLevel-1)
+			Level[GetFL(i,j,h)]>=QLevel-1 &&
+			Level[GetFL(i,h,k)]>=QLevel-1 &&
+			Level[GetFL(h,j,k)]>=QLevel-1)
 		{
 			if ((int)qmin.size()==minField) qmin.pop();
 			qmin.push((Field){FieldLabel,Area(i,j,k)});
@@ -418,9 +418,9 @@ inline void OutputResult()
 		}
 	MK(i, ii, 1) nMK(j, jj, 1) nMK(k, kk, jj+1) if (Level[FieldLabel=GetFL(i,j,k)]>=QLevel) MK(h, hh, 1)
 	 	if (h!=i && h!=j && h!=k && inField(i,j,k,h) &&
-			Level[FieldLabel=GetFL(i,j,h)]>=QLevel-1 &&
-			Level[FieldLabel=GetFL(i,h,k)]>=QLevel-1 &&
-			Level[FieldLabel=GetFL(h,j,k)]>=QLevel-1)
+			Level[GetFL(i,j,h)]>=QLevel-1 &&
+			Level[GetFL(i,h,k)]>=QLevel-1 &&
+			Level[GetFL(h,j,k)]>=QLevel-1)
 		{
 			if ((int)qmin.size()==minField) qmin.pop();
 			qmin.push((Field){FieldLabel,Area(i,j,k)});
@@ -442,9 +442,9 @@ inline void OutputResult()
 	tot=0;
 	MK(i, ii, 1) MK(j, jj, ii+1) MK(k, kk, jj+1) if (Level[FieldLabel=GetFL(i,j,k)]>=QLevel) nMK(h, hh, 1)
 	 	if (h!=i && h!=j && h!=k && inField(i,j,k,h) &&
-			Level[FieldLabel=GetFL(i,j,h)]>=QLevel-1 &&
-			Level[FieldLabel=GetFL(i,h,k)]>=QLevel-1 &&
-			Level[FieldLabel=GetFL(h,j,k)]>=QLevel-1)
+			Level[GetFL(i,j,h)]>=QLevel-1 &&
+			Level[GetFL(i,h,k)]>=QLevel-1 &&
+			Level[GetFL(h,j,k)]>=QLevel-1)
 		{
 			if ((int)qmin.size()==minField) qmin.pop();
 			qmin.push((Field){FieldLabel,Area(i,j,k)});
@@ -454,9 +454,9 @@ inline void OutputResult()
 		}
 	MK(i, ii, 1) MK(j, jj, ii+1) nMK(k, kk, 1) if (Level[FieldLabel=GetFL(i,j,k)]>=QLevel) MK(h, hh, 1)
 	 	if (h!=i && h!=j && h!=k && inField(i,j,k,h) &&
-			Level[FieldLabel=GetFL(i,j,h)]>=QLevel-1 &&
-			Level[FieldLabel=GetFL(i,h,k)]>=QLevel-1 &&
-			Level[FieldLabel=GetFL(h,j,k)]>=QLevel-1)
+			Level[GetFL(i,j,h)]>=QLevel-1 &&
+			Level[GetFL(i,h,k)]>=QLevel-1 &&
+			Level[GetFL(h,j,k)]>=QLevel-1)
 		{
 			if ((int)qmin.size()==minField) qmin.pop();
 			qmin.push((Field){FieldLabel,Area(i,j,k)});
@@ -478,9 +478,9 @@ inline void OutputResult()
 	tot=0;
 	MK(i, ii, 1) MK(j, jj, ii+1) MK(k, kk, jj+1) if (Level[FieldLabel=GetFL(i,j,k)]>=QLevel) MK(h, hh, 1)
 	 	if (h!=i && h!=j && h!=k && inField(i,j,k,h) &&
-			Level[FieldLabel=GetFL(i,j,h)]>=QLevel-1 &&
-			Level[FieldLabel=GetFL(i,h,k)]>=QLevel-1 &&
-			Level[FieldLabel=GetFL(h,j,k)]>=QLevel-1)
+			Level[GetFL(i,j,h)]>=QLevel-1 &&
+			Level[GetFL(i,h,k)]>=QLevel-1 &&
+			Level[GetFL(h,j,k)]>=QLevel-1)
 		{
 			if ((int)qmin.size()==minField) qmin.pop();
 			qmin.push((Field){FieldLabel,Area(i,j,k)});
