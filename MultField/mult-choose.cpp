@@ -54,7 +54,7 @@ inline void Spin(int lb, int a, int b)
 
 inline double COS(){return (G[1].x*G[2].x+G[1].y*G[2].y+G[1].z*G[2].z)/sqrt(G[1].x*G[1].x+G[1].y*G[1].y+G[1].z*G[1].z)/sqrt(G[2].x*G[2].x+G[2].y*G[2].y+G[2].z*G[2].z);}
 
-inline double Angle(int a, int b, int c) {Spin(1,a,b); Spin(2,c,b); return acos(COS());} // Spin Ôö¼ÓÁ½¸öÁÙÊ±ÏòÁ¿£¬COS ¼ÆËãÍêÉ¾È¥
+inline double Angle(int a, int b, int c) {Spin(1,a,b); Spin(2,c,b); return acos(COS());} // Spin å¢åŠ ä¸¤ä¸ªä¸´æ—¶å‘é‡ï¼ŒCOS è®¡ç®—å®Œåˆ å»
 
 inline double Area(int a, int b, int c) {return Angle(a,b,c)+Angle(b,c,a)+Angle(c,a,b)-pi;}
 
@@ -93,7 +93,7 @@ inline void ChangetoPosition(int a)
 	P[a].z=sin(P[a].y0/180.0*pi);
 }
 
-inline void ReadInput(const char *localFileName) // ¶ÁÈëJSON
+inline void ReadInput(const char *localFileName) // è¯»å…¥JSON
 {
 	string str, chunk;
 
@@ -267,12 +267,12 @@ int main()
 {
 	ReadInput("portal.txt");
 
-	system("cls"); printf("×ÜµãÊı£º%d\nµ¹ÊıµÚ¶ş¸ö Portal£º", n); cout << P[n-1].label << endl;
+	system("cls"); printf("æ€»ç‚¹æ•°ï¼š%d\nå€’æ•°ç¬¬äºŒä¸ª Portalï¼š", n); cout << P[n-1].label << endl;
 	getchar();
 
 	if (n>maxn-9)
 	{
-		puts("µãÊı¹ı¶à£¬ÇëÉ¾¼õ¡£");
+		puts("ç‚¹æ•°è¿‡å¤šï¼Œè¯·åˆ å‡ã€‚");
 		getchar(); return 0;
 	}
 

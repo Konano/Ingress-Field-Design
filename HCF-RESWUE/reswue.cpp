@@ -67,7 +67,7 @@ inline void ChangetoPosition(int a)
 	iss >> P[a].x >> tmp >> P[a].y;
 }
 
-inline void ReadBookmark(const char *localFileName) // 读入JSON
+inline void ReadBookmark(const char *localFileName) // 璇诲叆JSON
 {
 	string str, chunk;
 
@@ -154,7 +154,7 @@ inline string I_toString(int a)
 	return buffer;
 }
 
-Json::Value dt[19], wue; // JSON 信息载体
+Json::Value dt[19], wue; // JSON 淇℃伅杞戒綋
 int pt_num, lk_num, dt_num=4, dtn[19];
 
 inline void AddLine(int o, int a, int b)

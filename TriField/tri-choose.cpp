@@ -56,7 +56,7 @@ inline void ChangetoPosition(int a)
 	iss >> P[a].x >> tmp >> P[a].y;
 }
 
-inline void ReadInput(const char *localFileName) // ¶ÁÈëJSON
+inline void ReadInput(const char *localFileName) // è¯»å…¥JSON
 {
 	string str, chunk;
 
@@ -185,7 +185,7 @@ inline void OutputResult(int a, int b, int c)
 	puts("Bookmarks JSON:"); cout << writer.write(bm) << endl;
 	puts("DrawTools JSON:"); cout << writer.write(dt) << endl;
 
-	printf("¿ÉÄÜ¸ã»ìµÄÖØ¸´ Po Ãû£º\n");
+	printf("å¯èƒ½ææ··çš„é‡å¤ Po åï¼š\n");
 	rep(i, 1, n) rep(j, i+1, n) if (P[i].label == P[j].label) cout << P[i].label << endl;
 
 	fclose(stdout);
@@ -197,12 +197,12 @@ int main()
 
 	Total=n*(n-1)*(n-2);
 
-	printf("×ÜµãÊı£º%d\nµ¹ÊıµÚ¶ş¸ö Portal£º", n); cout << P[n-1].label << endl;
+	printf("æ€»ç‚¹æ•°ï¼š%d\nå€’æ•°ç¬¬äºŒä¸ª Portalï¼š", n); cout << P[n-1].label << endl;
 	getchar(); system("cls");
 
 	if (n>400)
 	{
-		puts("µãÊı¹ı¶à£¬ÇëÉ¾¼õ¡£");
+		puts("ç‚¹æ•°è¿‡å¤šï¼Œè¯·åˆ å‡ã€‚");
 		getchar(); return 0;
 	}
 
