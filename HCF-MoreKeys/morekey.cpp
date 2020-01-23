@@ -13,44 +13,44 @@
 #define dow(i, l, r) for(int i=l; i>=r; i--)
 #define clr(x, c) memset(x, c, sizeof(x))
 #define pi acos(-1)
-#define travel(i) for(PortalLevelList *p=PlistFirst[i]; p; p=p->next) // ±éÀúµÚ i ¸ö List
+#define travel(i) for(PortalLevelList *p=PlistFirst[i]; p; p=p->next) // éå†ç¬¬ i ä¸ª List
 
 using namespace std;
 
 #define maxTotal 1000
 #define maxs 166167001
 
-struct Portal // ¶¨Òå Portal ½á¹¹Ìå£¬x0,y0 ÊÇ¾­Î³¶È×ø±ê£¬x,y,z ÊÇÈıÎ¬×ø±ê£¨°ë¾¶Îª 1 µÄÇòÃæÉÏ£©£¬guid,latlng,label ÊÇ JSON ĞÅÏ¢
+struct Portal // å®šä¹‰ Portal ç»“æ„ä½“ï¼Œx0,y0 æ˜¯ç»çº¬åº¦åæ ‡ï¼Œx,y,z æ˜¯ä¸‰ç»´åæ ‡ï¼ˆåŠå¾„ä¸º 1 çš„çƒé¢ä¸Šï¼‰ï¼Œguid,latlng,label æ˜¯ JSON ä¿¡æ¯
 {
 	double x0, y0, x, y, z;
 	string guid, latlng, label;
 	bool MoreKeys;
-} P[maxTotal+1], tmpP[2]; // P[] ´¢´æ Portal ĞÅÏ¢£¬tmpP[] ÊÇ¼ÇÂ¼ÁÙÊ±ÈıÎ¬ÏòÁ¿
+} P[maxTotal+1], tmpP[2]; // P[] å‚¨å­˜ Portal ä¿¡æ¯ï¼ŒtmpP[] æ˜¯è®°å½•ä¸´æ—¶ä¸‰ç»´å‘é‡
 
 bool cmpXY(Portal a, Portal b){return a.x0<b.x0 || (a.x0==b.x0 && a.y0<b.y0);}
-// ´ÓĞ¡µ½´óÅÅĞò£¬x0 ÎªµÚÒ»¹Ø¼ü×Ö£¬y0 ÎªµÚ¶ş¹Ø¼ü×Ö
+// ä»å°åˆ°å¤§æ’åºï¼Œx0 ä¸ºç¬¬ä¸€å…³é”®å­—ï¼Œy0 ä¸ºç¬¬äºŒå…³é”®å­—
 
 struct Field{int x; double S;} qL[maxTotal+1], qR[maxTotal+1];
 bool operator < (Field a, Field b){return a.S<b.S;}
-// ¼ÇÂ¼ Field ÀàĞÍ£¬x ÎªÖĞ¼äµã Portal µÄ±àºÅ£¬S Îª Field µÄÃæ»ı
+// è®°å½• Field ç±»å‹ï¼Œx ä¸ºä¸­é—´ç‚¹ Portal çš„ç¼–å·ï¼ŒS ä¸º Field çš„é¢ç§¯
 
 struct PortalLevelList{int x; PortalLevelList *next;} Plist[maxTotal+1], *PlistFirst[9], *PlistEnd=Plist;
-// ¹¹½¨Ò»¸ö List ÀàĞÍ
+// æ„å»ºä¸€ä¸ª List ç±»å‹
 
 int n;
-// n Îª Portal ÊıÁ¿
+// n ä¸º Portal æ•°é‡
 
 int Field_ID[maxTotal+1][maxTotal+1];
-// Field_ID ÊÇÎªÁË·½±ã¼ÆËãÃ¿¸ö Field Ëù¶ÔÓ¦µÄ±àºÅ£¨ÏêÏ¸¼û GetFL º¯Êı£©
+// Field_ID æ˜¯ä¸ºäº†æ–¹ä¾¿è®¡ç®—æ¯ä¸ª Field æ‰€å¯¹åº”çš„ç¼–å·ï¼ˆè¯¦ç»†è§ GetFL å‡½æ•°ï¼‰
 
 inline void SWAP(int &a, int &b, int &c)
 {
 	if (a>b) swap(a,b); if (b>c) swap(b,c); if (a>b) swap(a,b);
 }
-// ½«Èı¸öÊı´ÓĞ¡µ½´óÅÅĞò
+// å°†ä¸‰ä¸ªæ•°ä»å°åˆ°å¤§æ’åº
 
 inline int GetFL(int a, int b, int c) {SWAP(a,b,c); return Field_ID[a][b]+c;}
-// ¸øÈı¸ö Portal µÄ±àºÅÇóÆä¶ÔÓ¦µÄ Field µÄ±àºÅ
+// ç»™ä¸‰ä¸ª Portal çš„ç¼–å·æ±‚å…¶å¯¹åº”çš„ Field çš„ç¼–å·
 
 inline void GetPortal(int FieldLabel, int &a, int &b, int &c)
 {
@@ -58,7 +58,7 @@ inline void GetPortal(int FieldLabel, int &a, int &b, int &c)
 	b=a+1; while (b<n-1 && Field_ID[a][b+1]+b+2<=FieldLabel) b++;
 	c=FieldLabel-Field_ID[a][b];
 }
-// ¸ø Field µÄ±àºÅÇóÆä¶ÔÓ¦µÄÈı¸ö Portal µÄ±àºÅ
+// ç»™ Field çš„ç¼–å·æ±‚å…¶å¯¹åº”çš„ä¸‰ä¸ª Portal çš„ç¼–å·
 
 
 
@@ -83,10 +83,10 @@ inline double COS()
 }
 
 inline double Angle(int a, int b, int c) {Spin(0,a,b); Spin(1,c,b); return acos(COS());}
-// ¼ÆËã a-b-c ÔÚÇòÃæÉÏµÄ½Ç¶È
+// è®¡ç®— a-b-c åœ¨çƒé¢ä¸Šçš„è§’åº¦
 
 inline double Area(int a, int b, int c) {return Angle(a,b,c)+Angle(b,c,a)+Angle(c,a,b)-pi;}
-// ¼ÆËã a-b-c ĞÎ³ÉµÄ Field µÄ´óĞ¡
+// è®¡ç®— a-b-c å½¢æˆçš„ Field çš„å¤§å°
 
 inline void FXL(int a, int b)
 {
@@ -98,7 +98,7 @@ inline void FXL(int a, int b)
 inline double COS(int a){return P[a].x*tmpP[0].x+P[a].y*tmpP[0].y+P[a].z*tmpP[0].z;}
 
 inline bool Left(int a, int b, int c) {FXL(a,b); return COS(c)>0;}
-// ÅĞ¶Ï c ÊÇ·ñÔÚ a¡úb ×ó²à
+// åˆ¤æ–­ c æ˜¯å¦åœ¨ aâ†’b å·¦ä¾§
 
 inline bool inField(int a, int b, int c, int d)
 {
@@ -106,7 +106,7 @@ inline bool inField(int a, int b, int c, int d)
 	if (!Left(a,b,c)) swap(b,c);
 	return Left(a,b,d) && Left(b,c,d) && Left(c,a,d);
 }
-// ÅĞ¶Ï d ÊÇ·ñÔÚ a-b-c ĞÎ³ÉµÄ Field ÄÚ
+// åˆ¤æ–­ d æ˜¯å¦åœ¨ a-b-c å½¢æˆçš„ Field å†…
 
 inline void ChangetoPosition(int a)
 {
@@ -117,9 +117,9 @@ inline void ChangetoPosition(int a)
 	P[a].y=sin(P[a].x0/180.0*pi)*cos(P[a].y0/180.0*pi);
 	P[a].z=sin(P[a].y0/180.0*pi);
 }
-// °Ñ¾­Î³¶È×ø±ê×ª³ÉÈıÎ¬×ø±ê
+// æŠŠç»çº¬åº¦åæ ‡è½¬æˆä¸‰ç»´åæ ‡
 
-inline void ReadInput(const char *localFileName) // ¶ÁÈë JSON
+inline void ReadInput(const char *localFileName) // è¯»å…¥ JSON
 {
 	string str, chunk;
 
@@ -159,7 +159,7 @@ inline void ReadInput(const char *localFileName) // ¶ÁÈë JSON
 		P[n].latlng = input["portals"]["idOthers"]["bkmrk"][*iter]["latlng"].asString();
 		P[n].label = input["portals"]["idOthers"]["bkmrk"][*iter]["label"].asString();
 		P[n].MoreKeys = false;
-		ChangetoPosition(n); // °Ñ¾­Î³¶È×ø±ê×ª³ÉÈıÎ¬×ø±ê
+		ChangetoPosition(n); // æŠŠç»çº¬åº¦åæ ‡è½¬æˆä¸‰ç»´åæ ‡
 	}
 }
 
@@ -174,39 +174,39 @@ inline int max3(int a, int b, int c){return (a>=b&&a>=c)?a:(b>=c?b:c);}
 
 inline void Max(int &a, int b){if (b>a) a=b;}
 
-char Level[maxs]; // ¼ÇÂ¼Ã¿¸ö Field µÄ×î´ó²ãÊı
-short int NextPortal[maxs];  // ¼ÇÂ¼Ã¿¸ö Field ÔÚ´ïµ½×î´ó²ãÊıÊ±µÄÄÚµã
-int Count[9]; // Count[i] ±íÊ¾ÓĞ¶àÉÙ¸ö Field Æä×î´ó²ãÊıÎª i
-int Lmx[maxTotal+1][maxTotal+1]; // Lmx[a][b] ±íÊ¾ÏòÁ¿ a¡úb ×ó±ßËùĞÎ³ÉµÄ Field µÄ×î´ó²ãÊı
+char Level[maxs]; // è®°å½•æ¯ä¸ª Field çš„æœ€å¤§å±‚æ•°
+short int NextPortal[maxs];  // è®°å½•æ¯ä¸ª Field åœ¨è¾¾åˆ°æœ€å¤§å±‚æ•°æ—¶çš„å†…ç‚¹
+int Count[9]; // Count[i] è¡¨ç¤ºæœ‰å¤šå°‘ä¸ª Field å…¶æœ€å¤§å±‚æ•°ä¸º i
+int Lmx[maxTotal+1][maxTotal+1]; // Lmx[a][b] è¡¨ç¤ºå‘é‡ aâ†’b å·¦è¾¹æ‰€å½¢æˆçš„ Field çš„æœ€å¤§å±‚æ•°
 
 
 
 
 
 
-clock_t gap; // ¼ÇÂ¼Ê±¼ä
+clock_t gap; // è®°å½•æ—¶é—´
 
-Json::Value bm, dt, ini_bm, null_dt; // JSON ĞÅÏ¢ÔØÌå
-
-
+Json::Value bm, dt, ini_bm, null_dt; // JSON ä¿¡æ¯è½½ä½“
 
 
 
 
 
-int QLevel; // Ñ¯ÎÊ²ãÊı
 
-struct xyz{int x,y,z;} pos[maxTotal+1]; // xyz ÊÇÒ»¸ö×ÔÉèµÄ²ÎÊı
+
+int QLevel; // è¯¢é—®å±‚æ•°
+
+struct xyz{int x,y,z;} pos[maxTotal+1]; // xyz æ˜¯ä¸€ä¸ªè‡ªè®¾çš„å‚æ•°
 bool operator < (xyz a, xyz b){return a.x<b.x || (a.x==b.x && a.y<b.y) || (a.x==b.x && a.y==b.y && a.z<b.z);}
-map<string,xyz> M0; // ±àºÅÓ³Éäµ½ xyz ²ÎÊı
-map<xyz,string> M1; // xyz ²ÎÊıÓ³Éäµ½±àºÅ
+map<string,xyz> M0; // ç¼–å·æ˜ å°„åˆ° xyz å‚æ•°
+map<xyz,string> M1; // xyz å‚æ•°æ˜ å°„åˆ°ç¼–å·
 
 inline xyz Ave(xyz a, xyz b, xyz c){return (xyz){(a.x+b.x+c.x)/3, (a.y+b.y+c.y)/3, (a.z+b.z+c.z)/3};}
-// ÓÉ Field ÉÏÈıµãµÄ xyz µÃµ½ÄÚµãµÄ xyz
+// ç”± Field ä¸Šä¸‰ç‚¹çš„ xyz å¾—åˆ°å†…ç‚¹çš„ xyz
 
 inline void GetOpinion()
 {
-	M0["A1"]=(xyz){(int)5e8,0,0}, M0["A2"]=(xyz){0,(int)5e8,0}, M0["A3"]=(xyz){0,0,(int)5e8}; // ÉèÖÃÈı¸ö¶¥µãµÄ xyz ²ÎÊı
+	M0["A1"]=(xyz){(int)5e8,0,0}, M0["A2"]=(xyz){0,(int)5e8,0}, M0["A3"]=(xyz){0,0,(int)5e8}; // è®¾ç½®ä¸‰ä¸ªé¡¶ç‚¹çš„ xyz å‚æ•°
 	M1[(xyz){(int)5e8,0,0}]="A1", M1[(xyz){0,(int)5e8,0}]="A2", M1[(xyz){0,0,(int)5e8}]="A3";
 
 	string tmp1="A", tmp2="Lv 0";
@@ -220,7 +220,7 @@ inline void GetOpinion()
 	ini_bm["portals"]["A"]["bkmrk"]["A2"]["guid"]="";
 	ini_bm["portals"]["A"]["bkmrk"]["A3"]["guid"]="";
 
-	// label.txt Ã¿Ò»ĞĞÓĞËÄ¸ö×Ö·û´®£¬¡°A B C D¡± ±íÊ¾ÒÔ±àºÅÎª A,B,C ĞÎ³ÉµÄ Field µÄÄÚµãµÄ±àºÅÎª D
+	// label.txt æ¯ä¸€è¡Œæœ‰å››ä¸ªå­—ç¬¦ä¸²ï¼Œâ€œA B C Dâ€ è¡¨ç¤ºä»¥ç¼–å·ä¸º A,B,C å½¢æˆçš„ Field çš„å†…ç‚¹çš„ç¼–å·ä¸º D
 
 	ifstream fin("label.txt");
 	int tmp, num=0; fin >> tmp; for(int i=1, a=1; i<tmp; i++) num+=a, a*=3;
@@ -241,7 +241,7 @@ inline void GetOpinion()
 
 
 
-int OPtot; // JSON ÄÚ Line µÄÊıÁ¿
+int OPtot; // JSON å†… Line çš„æ•°é‡
 
 inline string D_toString(double a)
 {
@@ -291,19 +291,19 @@ void OutputPlan(int a, int b, int c, int lv)
 	if (lv == 1)
 	{
 		AddLine(a,b,lv), AddLine(b,c,lv), AddLine(c,a,lv);
-		pos[a]=(xyz){(int)5e8,0,0}, AddPortal(a,lv); // ÓÉ xyz ²ÎÊı²éÑ¯µ½µ±Ç°µãËù¶ÔÓ¦µÄ±àºÅ
+		pos[a]=(xyz){(int)5e8,0,0}, AddPortal(a,lv); // ç”± xyz å‚æ•°æŸ¥è¯¢åˆ°å½“å‰ç‚¹æ‰€å¯¹åº”çš„ç¼–å·
 		pos[b]=(xyz){0,(int)5e8,0}, AddPortal(b,lv);
 		pos[c]=(xyz){0,0,(int)5e8}, AddPortal(c,lv);
 	}
 	int x=GetFL(a,b,c), d=NextPortal[x]; pos[d]=Ave(pos[a],pos[b],pos[c]);
 	AddPortal(d,++lv);
 	AddLine(a,d,lv), AddLine(b,d,lv), AddLine(c,d,lv);
-	OutputPlan(a,b,d,lv); // µİ¹éÊä³ö·½°¸
+	OutputPlan(a,b,d,lv); // é€’å½’è¾“å‡ºæ–¹æ¡ˆ
 	OutputPlan(b,c,d,lv);
 	OutputPlan(c,a,d,lv);
 }
 
-inline void OutputPlan(int FieldLabel) // Êä³ö·½°¸µ½ JSON
+inline void OutputPlan(int FieldLabel) // è¾“å‡ºæ–¹æ¡ˆåˆ° JSON
 {
 	int a, b, c; GetPortal(FieldLabel,a,b,c);
 	dt=null_dt; bm=ini_bm; OPtot=0; OutputPlan(a,b,c,1);
@@ -339,7 +339,7 @@ inline void OutputResult()
 
 
 
-	printf("ÎŞ MoreKeys Portal ÏŞÖÆ£º\n\n");
+	printf("æ—  MoreKeys Portal é™åˆ¶ï¼š\n\n");
 	tot=0;
 	rep(i, 1, n) rep(j, i+1, n) rep(k, j+1, n) if (Level[FieldLabel=GetFL(i,j,k)]>=QLevel)
 	{
@@ -349,11 +349,11 @@ inline void OutputResult()
 		qmax.push((Field){FieldLabel,-Area(i,j,k)});
 		if (tot<=OPRandomSize) OPRandom[tot++]=FieldLabel;
 	}
-	// Êä³ö×îĞ¡µÄÇ° minField ¸ö·½°¸
-	while (!qmin.empty()) printf("Ãæ»ı×îĞ¡£º#%d\n\n", (int)qmin.size()), OutputPlan(qmin.top().x), qmin.pop();
-	// Êä³ö×î´óµÄÇ° maxField ¸ö·½°¸
-	while (!qmax.empty()) printf("Ãæ»ı×î´ó£º#%d\n\n", (int)qmax.size()), OutputPlan(qmax.top().x), qmax.pop();
-	// Ëæ»úÊä³ö ranField ¸ö·½°¸
+	// è¾“å‡ºæœ€å°çš„å‰ minField ä¸ªæ–¹æ¡ˆ
+	while (!qmin.empty()) printf("é¢ç§¯æœ€å°ï¼š#%d\n\n", (int)qmin.size()), OutputPlan(qmin.top().x), qmin.pop();
+	// è¾“å‡ºæœ€å¤§çš„å‰ maxField ä¸ªæ–¹æ¡ˆ
+	while (!qmax.empty()) printf("é¢ç§¯æœ€å¤§ï¼š#%d\n\n", (int)qmax.size()), OutputPlan(qmax.top().x), qmax.pop();
+	// éšæœºè¾“å‡º ranField ä¸ªæ–¹æ¡ˆ
 	random_shuffle(OPRandom, OPRandom+tot);
 	rep(i, 1, min(tot,ranField)) printf("Random #%d\n\n", i), OutputPlan(OPRandom[i-1]);
 
@@ -366,7 +366,7 @@ inline void OutputResult()
 
 
 
-	printf("1 ¸ö MoreKey Portal ÔÚ¶¥µã»òÖĞµãÉÏ£º\n\n");
+	printf("1 ä¸ª MoreKey Portal åœ¨é¡¶ç‚¹æˆ–ä¸­ç‚¹ä¸Šï¼š\n\n");
 	tot=0;
 	MK(i, ii, 1) nMK(j, jj, 1) nMK(k, kk, jj+1) if (Level[FieldLabel=GetFL(i,j,k)]>=QLevel) nMK(h, hh, 1)
 	 	if (h!=i && h!=j && h!=k && inField(i,j,k,h) &&
@@ -392,17 +392,17 @@ inline void OutputResult()
 			qmax.push((Field){FieldLabel,-Area(i,j,k)});
 			if (tot<=OPRandomSize) OPRandom[tot++]=FieldLabel;
 		}
-	// Êä³ö×îĞ¡µÄÇ° minField ¸ö·½°¸
-	while (!qmin.empty()) printf("Ãæ»ı×îĞ¡£º#%d\n\n", (int)qmin.size()), OutputPlan(qmin.top().x), qmin.pop();
-	// Êä³ö×î´óµÄÇ° maxField ¸ö·½°¸
-	while (!qmax.empty()) printf("Ãæ»ı×î´ó£º#%d\n\n", (int)qmax.size()), OutputPlan(qmax.top().x), qmax.pop();
-	// Ëæ»úÊä³ö ranField ¸ö·½°¸
+	// è¾“å‡ºæœ€å°çš„å‰ minField ä¸ªæ–¹æ¡ˆ
+	while (!qmin.empty()) printf("é¢ç§¯æœ€å°ï¼š#%d\n\n", (int)qmin.size()), OutputPlan(qmin.top().x), qmin.pop();
+	// è¾“å‡ºæœ€å¤§çš„å‰ maxField ä¸ªæ–¹æ¡ˆ
+	while (!qmax.empty()) printf("é¢ç§¯æœ€å¤§ï¼š#%d\n\n", (int)qmax.size()), OutputPlan(qmax.top().x), qmax.pop();
+	// éšæœºè¾“å‡º ranField ä¸ªæ–¹æ¡ˆ
 	random_shuffle(OPRandom, OPRandom+tot);
 	rep(i, 1, min(tot,ranField)) printf("Random #%d\n\n", i), OutputPlan(OPRandom[i-1]);
 
 
 
-	printf("2 ¸ö MoreKey Portal ÔÚ¶¥µã»òÖĞµãÉÏ£º\n\n");
+	printf("2 ä¸ª MoreKey Portal åœ¨é¡¶ç‚¹æˆ–ä¸­ç‚¹ä¸Šï¼š\n\n");
 	tot=0;
 	MK(i, ii, 1) MK(j, jj, ii+1) nMK(k, kk, 1) if (Level[FieldLabel=GetFL(i,j,k)]>=QLevel) nMK(h, hh, 1)
 	 	if (h!=i && h!=j && h!=k && inField(i,j,k,h) &&
@@ -428,17 +428,17 @@ inline void OutputResult()
 			qmax.push((Field){FieldLabel,-Area(i,j,k)});
 			if (tot<=OPRandomSize) OPRandom[tot++]=FieldLabel;
 		}
-	// Êä³ö×îĞ¡µÄÇ° minField ¸ö·½°¸
-	while (!qmin.empty()) printf("Ãæ»ı×îĞ¡£º#%d\n\n", (int)qmin.size()), OutputPlan(qmin.top().x), qmin.pop();
-	// Êä³ö×î´óµÄÇ° maxField ¸ö·½°¸
-	while (!qmax.empty()) printf("Ãæ»ı×î´ó£º#%d\n\n", (int)qmax.size()), OutputPlan(qmax.top().x), qmax.pop();
-	// Ëæ»úÊä³ö ranField ¸ö·½°¸
+	// è¾“å‡ºæœ€å°çš„å‰ minField ä¸ªæ–¹æ¡ˆ
+	while (!qmin.empty()) printf("é¢ç§¯æœ€å°ï¼š#%d\n\n", (int)qmin.size()), OutputPlan(qmin.top().x), qmin.pop();
+	// è¾“å‡ºæœ€å¤§çš„å‰ maxField ä¸ªæ–¹æ¡ˆ
+	while (!qmax.empty()) printf("é¢ç§¯æœ€å¤§ï¼š#%d\n\n", (int)qmax.size()), OutputPlan(qmax.top().x), qmax.pop();
+	// éšæœºè¾“å‡º ranField ä¸ªæ–¹æ¡ˆ
 	random_shuffle(OPRandom, OPRandom+tot);
 	rep(i, 1, min(tot,ranField)) printf("Random #%d\n\n", i), OutputPlan(OPRandom[i-1]);
 
 
 
-	printf("3 ¸ö MoreKey Portal ÔÚ¶¥µã»òÖĞµãÉÏ£º\n\n");
+	printf("3 ä¸ª MoreKey Portal åœ¨é¡¶ç‚¹æˆ–ä¸­ç‚¹ä¸Šï¼š\n\n");
 	tot=0;
 	MK(i, ii, 1) MK(j, jj, ii+1) MK(k, kk, jj+1) if (Level[FieldLabel=GetFL(i,j,k)]>=QLevel) nMK(h, hh, 1)
 	 	if (h!=i && h!=j && h!=k && inField(i,j,k,h) &&
@@ -464,17 +464,17 @@ inline void OutputResult()
 			qmax.push((Field){FieldLabel,-Area(i,j,k)});
 			if (tot<=OPRandomSize) OPRandom[tot++]=FieldLabel;
 		}
-	// Êä³ö×îĞ¡µÄÇ° minField ¸ö·½°¸
-	while (!qmin.empty()) printf("Ãæ»ı×îĞ¡£º#%d\n\n", (int)qmin.size()), OutputPlan(qmin.top().x), qmin.pop();
-	// Êä³ö×î´óµÄÇ° maxField ¸ö·½°¸
-	while (!qmax.empty()) printf("Ãæ»ı×î´ó£º#%d\n\n", (int)qmax.size()), OutputPlan(qmax.top().x), qmax.pop();
-	// Ëæ»úÊä³ö ranField ¸ö·½°¸
+	// è¾“å‡ºæœ€å°çš„å‰ minField ä¸ªæ–¹æ¡ˆ
+	while (!qmin.empty()) printf("é¢ç§¯æœ€å°ï¼š#%d\n\n", (int)qmin.size()), OutputPlan(qmin.top().x), qmin.pop();
+	// è¾“å‡ºæœ€å¤§çš„å‰ maxField ä¸ªæ–¹æ¡ˆ
+	while (!qmax.empty()) printf("é¢ç§¯æœ€å¤§ï¼š#%d\n\n", (int)qmax.size()), OutputPlan(qmax.top().x), qmax.pop();
+	// éšæœºè¾“å‡º ranField ä¸ªæ–¹æ¡ˆ
 	random_shuffle(OPRandom, OPRandom+tot);
 	rep(i, 1, min(tot,ranField)) printf("Random #%d\n\n", i), OutputPlan(OPRandom[i-1]);
 
 
 
-	printf("4 ¸ö MoreKey Portal ÔÚ¶¥µã»òÖĞµãÉÏ£º\n\n");
+	printf("4 ä¸ª MoreKey Portal åœ¨é¡¶ç‚¹æˆ–ä¸­ç‚¹ä¸Šï¼š\n\n");
 	tot=0;
 	MK(i, ii, 1) MK(j, jj, ii+1) MK(k, kk, jj+1) if (Level[FieldLabel=GetFL(i,j,k)]>=QLevel) MK(h, hh, 1)
 	 	if (h!=i && h!=j && h!=k && inField(i,j,k,h) &&
@@ -488,18 +488,18 @@ inline void OutputResult()
 			qmax.push((Field){FieldLabel,-Area(i,j,k)});
 			if (tot<=OPRandomSize) OPRandom[tot++]=FieldLabel;
 		}
-	// Êä³ö×îĞ¡µÄÇ° minField ¸ö·½°¸
-	while (!qmin.empty()) printf("Ãæ»ı×îĞ¡£º#%d\n\n", (int)qmin.size()), OutputPlan(qmin.top().x), qmin.pop();
-	// Êä³ö×î´óµÄÇ° maxField ¸ö·½°¸
-	while (!qmax.empty()) printf("Ãæ»ı×î´ó£º#%d\n\n", (int)qmax.size()), OutputPlan(qmax.top().x), qmax.pop();
-	// Ëæ»úÊä³ö ranField ¸ö·½°¸
+	// è¾“å‡ºæœ€å°çš„å‰ minField ä¸ªæ–¹æ¡ˆ
+	while (!qmin.empty()) printf("é¢ç§¯æœ€å°ï¼š#%d\n\n", (int)qmin.size()), OutputPlan(qmin.top().x), qmin.pop();
+	// è¾“å‡ºæœ€å¤§çš„å‰ maxField ä¸ªæ–¹æ¡ˆ
+	while (!qmax.empty()) printf("é¢ç§¯æœ€å¤§ï¼š#%d\n\n", (int)qmax.size()), OutputPlan(qmax.top().x), qmax.pop();
+	// éšæœºè¾“å‡º ranField ä¸ªæ–¹æ¡ˆ
 	random_shuffle(OPRandom, OPRandom+tot);
 	rep(i, 1, min(tot,ranField)) printf("Random #%d\n\n", i), OutputPlan(OPRandom[i-1]);
 
 
 
-	// ÖØÃûÔ¤¾¯
-	printf("ĞèÒª×¢ÒâµÄÖØÃû Po£º\n");
+	// é‡åé¢„è­¦
+	printf("éœ€è¦æ³¨æ„çš„é‡å Poï¼š\n");
 	rep(i, 1, n) rep(j, i+1, n) if (P[i].label == P[j].label) {cout << P[i].label << endl; break;}
 
 	fclose(stdout);
@@ -520,58 +520,58 @@ int main()
 {
 	system("cls");
 
-	cout << "Çë½«µ¼³öµÄ Bookmark ´¢´æÎª portal.txt ²¢·ÅÖÃÓÚÍ¬Ä¿Â¼ÏÂ" << endl;
+	cout << "è¯·å°†å¯¼å‡ºçš„ Bookmark å‚¨å­˜ä¸º portal.txt å¹¶æ”¾ç½®äºåŒç›®å½•ä¸‹" << endl;
 	getchar();
 
 	ReadInput("portal.txt"); srand(time(NULL));
 
-	cout << "×ÜµãÊı£º" << n << endl;
-	cout << "µ¹ÊıµÚ¶ş¸ö Portal£º" << P[n-1].label << endl;
-	cout << "ÈôÓë¶ÁÈëÊı¾İ²»ÎÇºÏ£¬ÔòÇë¼ì²éÏÂÊÇ·ñ²Ù×÷ÓĞÎó£¨»òÕßÊÇ´¥·¢ÁËÉĞÎ´ĞŞ¸´µÄ Portal Ãû³Æ Bug£©" << endl;
+	cout << "æ€»ç‚¹æ•°ï¼š" << n << endl;
+	cout << "å€’æ•°ç¬¬äºŒä¸ª Portalï¼š" << P[n-1].label << endl;
+	cout << "è‹¥ä¸è¯»å…¥æ•°æ®ä¸å»åˆï¼Œåˆ™è¯·æ£€æŸ¥ä¸‹æ˜¯å¦æ“ä½œæœ‰è¯¯ï¼ˆæˆ–è€…æ˜¯è§¦å‘äº†å°šæœªä¿®å¤çš„ Portal åç§° Bugï¼‰" << endl;
 	getchar();
 
 	if (n>maxTotal)
 	{
-		cout << "Portal ÊıÁ¿³¬¹ıÁË " << maxTotal << " µÄÉÏÏŞ£¬ÇëÉ¾¼õ¡£" << endl;
+		cout << "Portal æ•°é‡è¶…è¿‡äº† " << maxTotal << " çš„ä¸Šé™ï¼Œè¯·åˆ å‡ã€‚" << endl;
 		getchar(); return 0;
 	}
 
-	sort(P+1, P+1+n, cmpXY); // °´¾­Î³×ø±êÅÅĞò
+	sort(P+1, P+1+n, cmpXY); // æŒ‰ç»çº¬åæ ‡æ’åº
 
 	int tot=0; rep(i, 1, n-2) rep(j, i+1, n-1) tot+=n-j, Field_ID[i][j]=tot-n;
-	// Ã¶¾Ù×ó¶ËµãºÍÖĞ¼ä¶Ëµã£¬tot ¼ÇÂ¼ Field ×ÜÊı£¬Field_ID ÊÇÎªÁË·½±ã¼ÆËãÃ¿¸ö Field Ëù¶ÔÓ¦µÄ±àºÅ£¨ÏêÏ¸¼û GetFL º¯Êı£©
+	// æšä¸¾å·¦ç«¯ç‚¹å’Œä¸­é—´ç«¯ç‚¹ï¼Œtot è®°å½• Field æ€»æ•°ï¼ŒField_ID æ˜¯ä¸ºäº†æ–¹ä¾¿è®¡ç®—æ¯ä¸ª Field æ‰€å¯¹åº”çš„ç¼–å·ï¼ˆè¯¦ç»†è§ GetFL å‡½æ•°ï¼‰
 
-	int now=0, totL, totR; // now ±íÊ¾µ±Ç°ÒÑ¾­´¦ÀíÍêÁË¶àÉÙ¸ö Field
-	rep(c, 3, n) dow(a, c-2, 1) // ´Ó×óÍùÓÒÃ¶¾ÙÓÒ¶Ëµã£¬´ÓÓÒÍù×óÃ¶¾Ù×ó¶Ëµã
+	int now=0, totL, totR; // now è¡¨ç¤ºå½“å‰å·²ç»å¤„ç†å®Œäº†å¤šå°‘ä¸ª Field
+	rep(c, 3, n) dow(a, c-2, 1) // ä»å·¦å¾€å³æšä¸¾å³ç«¯ç‚¹ï¼Œä»å³å¾€å·¦æšä¸¾å·¦ç«¯ç‚¹
 	{
 		totL=totR=0;
 		rep(b, a+1, c-1) if (Left(a,c,b)) qL[++totL]=(Field){b,Area(a,b,c)}; else qR[++totR]=(Field){b,Area(a,c,b)};
-		// Ã¶¾ÙÖĞ¼ä¶Ëµã£¬qL[] ÎªÏòÁ¿ a¡úc ×ó±ßµÄ Portal£¨×ÜÊıÎª totL£©£¬qR[] ÎªÏòÁ¿ a¡úc ÓÒ±ßµÄ Portal£¨×ÜÊıÎª totR£©
+		// æšä¸¾ä¸­é—´ç«¯ç‚¹ï¼ŒqL[] ä¸ºå‘é‡ aâ†’c å·¦è¾¹çš„ Portalï¼ˆæ€»æ•°ä¸º totLï¼‰ï¼ŒqR[] ä¸ºå‘é‡ aâ†’c å³è¾¹çš„ Portalï¼ˆæ€»æ•°ä¸º totRï¼‰
 		if (totL)
 		{
-			sort(qL+1, qL+1+totL); // °´Ãæ»ı´ÓĞ¡µ½´óÅÅĞò
-			clr(PlistFirst,0); PlistEnd=Plist; // List ³õÊ¼»¯
+			sort(qL+1, qL+1+totL); // æŒ‰é¢ç§¯ä»å°åˆ°å¤§æ’åº
+			clr(PlistFirst,0); PlistEnd=Plist; // List åˆå§‹åŒ–
 			rep(i, 1, totL)
 			{
-				int b=qL[i].x, FieldLabel=GetFL(a,b,c), mxLevel=max(Lmx[c][b],Lmx[b][a]); // mxLevel ÊÇÓÉÏòÁ¿ c¡úb ºÍ b¡úa ×ó±ßËùĞÎ³ÉµÄ Field µÄ×î´ó²ãÊıËù¾ö¶¨µÄ Level ÉÏÏŞ
-				char &Lv=Level[FieldLabel]; Lv=1; // Lv Îªµ±Ç° Field µÄ Level
-				dow(o, mxLevel, 1) travel(o) if (Lv>o) break; else if (inField(a,b,c,p->x)) // ´Ó¸ßµ½µÍÃ¶¾ÙÄÚ²ã Field µÈ¼¶²¢±éÀú List
+				int b=qL[i].x, FieldLabel=GetFL(a,b,c), mxLevel=max(Lmx[c][b],Lmx[b][a]); // mxLevel æ˜¯ç”±å‘é‡ câ†’b å’Œ bâ†’a å·¦è¾¹æ‰€å½¢æˆçš„ Field çš„æœ€å¤§å±‚æ•°æ‰€å†³å®šçš„ Level ä¸Šé™
+				char &Lv=Level[FieldLabel]; Lv=1; // Lv ä¸ºå½“å‰ Field çš„ Level
+				dow(o, mxLevel, 1) travel(o) if (Lv>o) break; else if (inField(a,b,c,p->x)) // ä»é«˜åˆ°ä½æšä¸¾å†…å±‚ Field ç­‰çº§å¹¶éå† List
 				{
-					int tmp=min3(o,Level[GetFL(a,b,p->x)],Level[GetFL(b,c,p->x)])+1; // ÇóÄÚµãÎª p->x Ê±µ±Ç° Field ËùÄÜ´ïµ½µÄ×î´ó²ãÊı
+					int tmp=min3(o,Level[GetFL(a,b,p->x)],Level[GetFL(b,c,p->x)])+1; // æ±‚å†…ç‚¹ä¸º p->x æ—¶å½“å‰ Field æ‰€èƒ½è¾¾åˆ°çš„æœ€å¤§å±‚æ•°
 					if (tmp>Lv) Lv=tmp, NextPortal[FieldLabel]=p->x;
 				}
 
-				int tmp=min(Lv,max(Lmx[a][b],Lmx[b][c])); // ÅĞ¶ÏÏÂµ± b ×÷ÎªÄÚµã a-c ×ö±ßµÄÊ±ºò×î¶àÄÜ¶àÉÙ²ã
-				PlistEnd->x=b, PlistEnd->next=PlistFirst[tmp], PlistFirst[tmp]=PlistEnd++; // ½« b ¼ÓÈëµ½ List[tmp]
+				int tmp=min(Lv,max(Lmx[a][b],Lmx[b][c])); // åˆ¤æ–­ä¸‹å½“ b ä½œä¸ºå†…ç‚¹ a-c åšè¾¹çš„æ—¶å€™æœ€å¤šèƒ½å¤šå°‘å±‚
+				PlistEnd->x=b, PlistEnd->next=PlistFirst[tmp], PlistFirst[tmp]=PlistEnd++; // å°† b åŠ å…¥åˆ° List[tmp]
 
-				Max(Lmx[a][c],Lv); Max(Lmx[c][b],Lv); Max(Lmx[b][a],Lv); // ¸üĞÂ Lmx Êı×é
+				Max(Lmx[a][c],Lv); Max(Lmx[c][b],Lv); Max(Lmx[b][a],Lv); // æ›´æ–° Lmx æ•°ç»„
 
 				Count[(int)Lv]++; now++;
 				if ((double)(clock()-gap)/CLOCKS_PER_SEC>=0.1)
-					system("cls"), printf("%.6lf%%\n", 100.0*now/tot), gap=clock(); // Ã¿¸ô 0.1s ÏÔÊ¾Ò»´Î°Ù·Ö±È½ø¶È
+					system("cls"), printf("%.6lf%%\n", 100.0*now/tot), gap=clock(); // æ¯éš” 0.1s æ˜¾ç¤ºä¸€æ¬¡ç™¾åˆ†æ¯”è¿›åº¦
 			}
 		}
-		if (totR) // ×¢ÊÍÍ¬ÉÏ
+		if (totR) // æ³¨é‡ŠåŒä¸Š
 		{
 			sort(qR+1, qR+1+totR);
 			clr(PlistFirst,0); PlistEnd=Plist;
@@ -598,11 +598,11 @@ int main()
 	}
 
 	system("cls");
-	rep(i, 3, 7) printf("%d ÖØÖñËñ½â: %d ¸ö\n", i, Count[i]); puts(""); puts("");
-	printf("ÇëÎÊÒªÀ´·İ¶àÉÙÖØµÄÖñËñ£¿(3-7)\n");
+	rep(i, 3, 7) printf("%d é‡ç«¹ç¬‹è§£: %d ä¸ª\n", i, Count[i]); puts(""); puts("");
+	printf("è¯·é—®è¦æ¥ä»½å¤šå°‘é‡çš„ç«¹ç¬‹ï¼Ÿ(3-7)\n");
 
 	QLevel=3; scanf("%d", &QLevel);
-	puts("ÓĞ¹ØĞÅÏ¢ÕıÔÚÊä³öµ½result.txt£¬×£ÄãºÃÔË>.<");
+	puts("æœ‰å…³ä¿¡æ¯æ­£åœ¨è¾“å‡ºåˆ°result.txtï¼Œç¥ä½ å¥½è¿>.<");
 	GetOpinion();
 	OutputResult();
 

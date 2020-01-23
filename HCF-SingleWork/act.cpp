@@ -68,7 +68,7 @@ inline void ChangetoPosition(int a)
 	iss >> P[a].x >> tmp >> P[a].y;
 }
 
-inline void ReadBookmark(const char *localFileName) // ¶ÁÈëJSON
+inline void ReadBookmark(const char *localFileName) // è¯»å…¥JSON
 {
 	string str, chunk;
 
@@ -108,7 +108,7 @@ inline int FindLB(double x, double y)
 	rep(i, 1, n) if (fabs(x-P[i].x)<1e-7 && fabs(y-P[i].y)<1e-7) return i; return 0;
 }
 
-inline void ReadWay(const char *localFileName) // ¶ÁÈëJSON
+inline void ReadWay(const char *localFileName) // è¯»å…¥JSON
 {
 	string str, chunk;
 
@@ -139,15 +139,15 @@ inline void ReadWay(const char *localFileName) // ¶ÁÈëJSON
 		int x=FindLB(input[0]["latLngs"][o-1]["lat"].asDouble(),input[0]["latLngs"][o-1]["lng"].asDouble());
 		if (!x)
 		{
-			cout << endl << "Â·Ïß³öÏÖÎÊÌâ£¬ĞèÒªĞŞ¸Ä£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡" << endl;
-			cout << "×ø±ê£º" << setiosflags(ios::fixed) << setprecision(6) << input[0]["latLngs"][o-1]["lat"].asDouble() << ',' << input[0]["latLngs"][o-1]["lng"].asDouble() << endl;
-			cout << "Î´ÔÚ Bookmark ÖĞÕÒµ½´Ëµã¡£" << endl;
+			cout << endl << "è·¯çº¿å‡ºç°é—®é¢˜ï¼Œéœ€è¦ä¿®æ”¹ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼" << endl;
+			cout << "åæ ‡ï¼š" << setiosflags(ios::fixed) << setprecision(6) << input[0]["latLngs"][o-1]["lat"].asDouble() << ',' << input[0]["latLngs"][o-1]["lng"].asDouble() << endl;
+			cout << "æœªåœ¨ Bookmark ä¸­æ‰¾åˆ°æ­¤ç‚¹ã€‚" << endl;
 			fclose(stdout); return;
 		}
 		if (vis[x])
 		{
-			cout << endl << "Â·Ïß³öÏÖÎÊÌâ£¬ĞèÒªĞŞ¸Ä£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡" << endl;
-			cout << "<" << P[x].label << "> ÖØ¸´¾­¹ıÁ½´Î£¡" << endl;
+			cout << endl << "è·¯çº¿å‡ºç°é—®é¢˜ï¼Œéœ€è¦ä¿®æ”¹ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼" << endl;
+			cout << "<" << P[x].label << "> é‡å¤ç»è¿‡ä¸¤æ¬¡ï¼" << endl;
 			fclose(stdout); return;
 		}
 
@@ -169,8 +169,8 @@ inline void ReadWay(const char *localFileName) // ¶ÁÈëJSON
 
 		if (vis[F[x][0]] && vis[F[x][1]] && vis[F[x][2]])
 		{
-			cout << endl << "°¡Â·Ïß³öÏÖÎÊÌâ£¬ĞèÒªĞŞ¸Ä£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡" << endl;
-			cout << "<" << P[x].label << "> ±ØĞë±È <" << P[F[x][0]].label << ">,<" << P[F[x][1]].label << ">,<" << P[F[x][2]].label << "> Èı¸öÖĞµÄÈÎÒâÒ»¸öÏÈ¾­¹ı" << endl;
+			cout << endl << "å•Šè·¯çº¿å‡ºç°é—®é¢˜ï¼Œéœ€è¦ä¿®æ”¹ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼" << endl;
+			cout << "<" << P[x].label << "> å¿…é¡»æ¯” <" << P[F[x][0]].label << ">,<" << P[F[x][1]].label << ">,<" << P[F[x][2]].label << "> ä¸‰ä¸ªä¸­çš„ä»»æ„ä¸€ä¸ªå…ˆç»è¿‡" << endl;
 			fclose(stdout); return;
 		}
 		vis[x]=1;
@@ -178,8 +178,8 @@ inline void ReadWay(const char *localFileName) // ¶ÁÈëJSON
 
 	rep(i, 1, n) if (InBook[i] && !vis[i])
 	{
-		cout << endl << "°¡Â·Ïß³öÏÖÎÊÌâ£¬ĞèÒªĞŞ¸Ä£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡" << endl;
-		cout << "<" << P[i].label << "> Î´¾­¹ı£¡" << endl;
+		cout << endl << "å•Šè·¯çº¿å‡ºç°é—®é¢˜ï¼Œéœ€è¦ä¿®æ”¹ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼" << endl;
+		cout << "<" << P[i].label << "> æœªç»è¿‡ï¼" << endl;
 		fclose(stdout); return;
 	}
 
