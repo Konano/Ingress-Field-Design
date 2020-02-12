@@ -1,0 +1,1 @@
+{"maps":{"idOthers":{"label":"Others","state":1,"bkmrk":{}}},"portals":{"idA":{"label":"A","state":1,"bkmrk":{}},"idB":{"label":"B","state":1,"bkmrk":{"id1495894525992131":{"guid":"0c551a1ba00346459eb6a9cdf6a1fe5a.11","latlng":"23.335977,116.676696","label":"金山中学大门"}}},"idOthers":{"label":"Others","state":1,"bkmrk":{}}}}

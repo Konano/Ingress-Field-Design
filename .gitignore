@@ -4,4 +4,6 @@
 *way.txt
 *act.txt
 *.exe
+*.out
 release
+.vscode

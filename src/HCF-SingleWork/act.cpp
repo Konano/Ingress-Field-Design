@@ -39,7 +39,7 @@ bool vis[500], InBook[500];
 map<int,string> M0;
 map<string,int> M1;
 
-inline void GetOpinion()
+inline void getOpinion()
 {
 	M0[++n]="A1", M1["A1"]=n;
 	M0[++n]="A2", M1["A2"]=n;
@@ -68,7 +68,7 @@ inline void ChangetoPosition(int a)
 	iss >> P[a].x >> tmp >> P[a].y;
 }
 
-inline void ReadBookmark(const char *localFileName) // 读入JSON
+inline void importBookmarks(const char *localFileName) // 读入JSON
 {
 	string str, chunk;
 
@@ -108,7 +108,7 @@ inline int FindLB(double x, double y)
 	rep(i, 1, n) if (fabs(x-P[i].x)<1e-7 && fabs(y-P[i].y)<1e-7) return i; return 0;
 }
 
-inline void ReadWay(const char *localFileName) // 读入JSON
+inline void importWay(const char *localFileName) // 读入JSON
 {
 	string str, chunk;
 
@@ -188,8 +188,8 @@ inline void ReadWay(const char *localFileName) // 读入JSON
 
 int main()
 {
-	GetOpinion();
-	ReadBookmark("bookmark.txt");
-	ReadWay("way.txt");
+	getOpinion();
+	importBookmarks("bookmark.txt");
+	importWay("way.txt");
 	return 0;
 }
