@@ -15,8 +15,8 @@ struct Portal
 {
 	double lat, lng, x, y, z, S;
 	string guid, latlng, label;
-    Portal() {}
-    Portal(double x, double y, double z) : x(x), y(y), z(z) {}
+    Portal() : S(0) {}
+    Portal(double x, double y, double z) : x(x), y(y), z(z), S(0) {}
     void to_xyz() {
         istringstream iss(latlng);
         iss >> lat >> tmp_char >> lng;
@@ -36,7 +36,7 @@ inline Portal spin(const Portal &a, const Portal &b) {
 }
 
 inline double _cos(const Portal &a, const Portal &b) {
-    return (a.x * b.x + a.y * b.y + a.z * b.z) 
+    return (a.x * b.x + a.y * b.y + a.z * b.z)
         / sqrt(a.x * a.x + a.y * a.y + a.z * a.z)
         / sqrt(b.x * b.x + b.y * b.y + b.z * b.z);
 }
@@ -45,8 +45,8 @@ inline double angle(const Portal &a, const Portal &b, const Portal &c) {
     return acos(_cos(spin(a, b), spin(c, b)));
 }
 
-inline double area(const Portal &a, const Portal &b, const Portal &c) { 
-    return angle(a,b,c) + angle(b,c,a) + angle(c,a,b) - pi; 
+inline double area(const Portal &a, const Portal &b, const Portal &c) {
+    return angle(a,b,c) + angle(b,c,a) + angle(c,a,b) - pi;
 }
 
 inline Portal normal(const Portal &a, const Portal &b)
@@ -63,9 +63,9 @@ inline bool isLeft(const Portal &a, const Portal &b, const Portal &c) { return d
 inline bool inField(const Portal &a, const Portal &b, const Portal &c, const Portal &d)
 {
 	if (d == a || d == b || d == c) return false;
-	if (!isLeft(a, b, c)) 
+	if (!isLeft(a, b, c))
         return isLeft(a, c, d) && isLeft(c, b, d) && isLeft(b, a, d);
-	else 
+	else
         return isLeft(a, b, d) && isLeft(b, c, d) && isLeft(c, a, d);
 }
 
@@ -94,12 +94,11 @@ inline void import(const char *localFileName) {
     num += input["portals"]["idB"]["bkmrk"].getMemberNames().size();
     num += input["portals"]["idOthers"]["bkmrk"].getMemberNames().size();
 
-    // system("cls"); // FIXME
     printf("Portal nums: %d\n", num);
 
     if (num > maxPortal) {
         printf("Only support no more than %d portals.\n", maxPortal);
-        getchar(); 
+        getchar();
         exit(0);
     }
 
@@ -113,7 +112,7 @@ inline void import(const char *localFileName) {
 	}
     if (A_num == 0) {
         puts("Folder A should not be null.");
-        getchar(); 
+        getchar();
         exit(0);
     }
 
@@ -127,7 +126,7 @@ inline void import(const char *localFileName) {
 	}
     if (B_num == 0) {
         puts("Folder B should not be null.");
-        getchar(); 
+        getchar();
         exit(0);
     }
 
@@ -154,7 +153,7 @@ inline void addPortal(const Portal &a)
 
 inline void addLink(const Portal &a, const Portal &b)
 {
-	drawnitems[dr_num]["latLngs"][0]["lat"] = to_string(a.lat); 
+	drawnitems[dr_num]["latLngs"][0]["lat"] = to_string(a.lat);
 	drawnitems[dr_num]["latLngs"][0]["lng"] = to_string(a.lng);
 	drawnitems[dr_num]["latLngs"][1]["lat"] = to_string(b.lat);
 	drawnitems[dr_num]["latLngs"][1]["lng"] = to_string(b.lng);
@@ -170,12 +169,11 @@ int layer[maxPortal], nxt[maxPortal], maxLayer = 0;
 int main() {
     import("portal.txt");
 
-    freopen("mult-result.txt", "w", stdout); 
     addLink(PortalA[0], PortalB[0]);
 
     q.clear();
     for (int i = 0; i < C_num; i++) {
-        if (isLeft(PortalA[0], PortalB[0], PortalC[i])) {  
+        if (isLeft(PortalA[0], PortalB[0], PortalC[i])) {
             q.push_back(pair<double,int>(area(PortalA[0], PortalB[0], PortalC[i]), i));
         }
     }
@@ -210,7 +208,7 @@ int main() {
 
     q.clear();
     for (int i = 0; i < C_num; i++) {
-        if (isLeft(PortalB[0], PortalA[0], PortalC[i])) {  
+        if (isLeft(PortalB[0], PortalA[0], PortalC[i])) {
             q.push_back(pair<double,int>(area(PortalA[0], PortalB[0], PortalC[i]), i));
         }
     }
@@ -243,14 +241,13 @@ int main() {
         break;
     }
 
+    freopen("mult-result.txt", "w", stdout);
+
 	Json::FastWriter writer;
 	puts("Bookmarks JSON:"); cout << writer.write(bookmarks) << endl;
 	puts("DrawTools JSON:"); cout << writer.write(drawnitems) << endl;
 
 	fclose(stdout);
-    
-    puts("Complete!");
-    getchar();
 
     return 0;
 }

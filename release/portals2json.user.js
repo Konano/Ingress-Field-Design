@@ -17,7 +17,7 @@
 // ==/UserScript==
 // MIT License, Copyright (c) 2017 Brian Hayes ("Hayeswise")
 // For more information, visit https://github.com/hayeswise/iitc-wise-portalsinpolygon
-/*
+/* a
  * Thanks to:
  * IITC - Ingress Intel Total Conversion - https://iitc.me/ and https://github.com/iitc-project/ingress-intel-total-conversion
  *   License: https://github.com/iitc-project/ingress-intel-total-conversion/blob/master/LICENSE

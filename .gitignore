@@ -1,9 +1,8 @@
-*bookmark.txt
-*portal.txt
-*result.txt
-*way.txt
-*act.txt
+*.txt
+!*-sample.txt
 *.exe
+!release/*.exe
 *.out
-release
+!release/*.out
+
 .vscode

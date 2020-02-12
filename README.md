@@ -8,7 +8,7 @@
 
 ## Refactoring……
 
-- [ ] BAF
+- [x] BAF
 - [ ] HCF
 - [ ] HCF-MoreKeys
 - [ ] HCF-RESWUE
