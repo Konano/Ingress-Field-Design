@@ -220,9 +220,9 @@ inline void GetOpinion()
 	ini_bm["portals"]["A"]["bkmrk"]["A2"]["guid"]="";
 	ini_bm["portals"]["A"]["bkmrk"]["A3"]["guid"]="";
 
-	// label.txt 每一行有四个字符串，“A B C D” 表示以编号为 A,B,C 形成的 Field 的内点的编号为 D
+	// LABEL 每一行有四个字符串，“A B C D” 表示以编号为 A,B,C 形成的 Field 的内点的编号为 D
 
-	ifstream fin("label.txt");
+	ifstream fin("LABEL");
 	int tmp, num=0; fin >> tmp; for(int i=1, a=1; i<tmp; i++) num+=a, a*=3;
 
 	string a, b, c, d;
