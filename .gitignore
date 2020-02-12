@@ -1,8 +1,8 @@
 *.txt
 !*-sample.txt
 *.exe
-!release/*.exe
+!release/**/*.exe
 *.out
-!release/*.out
+!release/**/*.out
 
 .vscode
