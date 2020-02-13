@@ -1,3 +1,10 @@
+#if defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#elif defined(_MSC_VER)
+#pragma warning(disable : 4996)
+#endif
+
 #include <cstdio>
 #include <algorithm>
 #include <sstream>
@@ -105,7 +112,8 @@ inline void importBookmarks(const char *localFileName) // 读入JSON
 
 inline int FindLB(double x, double y)
 {
-	rep(i, 1, n) if (fabs(x-P[i].x)<1e-7 && fabs(y-P[i].y)<1e-7) return i; return 0;
+	rep(i, 1, n) if (fabs(x-P[i].x)<1e-7 && fabs(y-P[i].y)<1e-7) return i;
+	return 0;
 }
 
 inline void importWay(const char *localFileName) // 读入JSON

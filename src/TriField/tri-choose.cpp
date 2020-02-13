@@ -1,3 +1,10 @@
+#if defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#elif defined(_MSC_VER)
+#pragma warning(disable : 4996)
+#endif
+
 #include <cstdio>
 #include <algorithm>
 #include <sstream>
@@ -91,7 +98,8 @@ inline void ReadInput(const char *localFileName) // 读入JSON
 int FieldLevel(int a, int b, int c)
 {
 	int x=GetPID(a,b,c), tmp;
-	if (lv[x]) return lv[x]; tot++; lv[x]=0;
+	if (lv[x]) return lv[x];
+	tot++; lv[x]=0;
 	rep(i, 1, n) if (i!=a && i!=b && i!=c && inField(a,b,c,i) && (tmp=FieldLevel(b,c,i))>lv[x])
 		lv[x]=tmp, nx[x]=i;
 	if ((double)(clock()-gap)/CLOCKS_PER_SEC>=0.1)

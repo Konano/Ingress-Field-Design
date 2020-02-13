@@ -1,3 +1,10 @@
+#if defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#elif defined(_MSC_VER)
+#pragma warning(disable : 4996)
+#endif
+
 #include <cstdio>
 #include <cmath>
 #include <algorithm>
@@ -44,7 +51,9 @@ int Field_ID[maxTotal+1][maxTotal+1];
 
 inline void SWAP(int &a, int &b, int &c)
 {
-	if (a>b) swap(a,b); if (b>c) swap(b,c); if (a>b) swap(a,b);
+	if (a>b) swap(a,b); 
+	if (b>c) swap(b,c); 
+	if (a>b) swap(a,b);
 }
 // 将三个数从小到大排序
 
@@ -274,7 +283,8 @@ inline void AddPortal(int a, int lv)
 
 void OutputPlan(int a, int b, int c, int lv)
 {
-	if (lv == QLevel) return; SWAP(a,b,c);
+	if (lv == QLevel) return;
+	SWAP(a,b,c);
 	if (lv == 1)
 	{
 		AddLine(a,b,lv), AddLine(b,c,lv), AddLine(c,a,lv);
@@ -445,7 +455,8 @@ int main()
 	}
 
 	system("cls");
-	rep(i, 3, 7) printf("%d 重竹笋解: %d 个\n", i, Count[i]); puts(""); puts("");
+	rep(i, 3, 7) printf("%d 重竹笋解: %d 个\n", i, Count[i]); 
+	puts(""); puts("");
 	printf("请问要来份多少重的竹笋？(3-7)\n");
 
 	QLevel=3; scanf("%d", &QLevel);
