@@ -19,12 +19,9 @@ make install
 ## Refactoring……
 
 - [x] BAF
-- [ ] HCF
+- [x] HCF
 - [ ] HCF-MoreKeys
 - [ ] HCF-RESWUEV1
 - [ ] HCF-SingleWork
 - [x] MultField
 - [ ] TriField
-
-- [ ] Need modify wiki
-- [ ] Compile
