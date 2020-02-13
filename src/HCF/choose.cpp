@@ -6,6 +6,7 @@
 #endif
 
 #include <cmath>
+#include <ctime>
 #include <queue>
 #include <string>
 #include <fstream>
@@ -36,7 +37,7 @@ struct xyz {
 	xyz operator + (const xyz &a) const { return xyz(x + a.x, y + a.y, z + a.z); }
 	xyz operator - (const xyz &a) const { return xyz(x - a.x, y - a.y, z - a.z); }
 	xyz operator / (const double a) const { return xyz(x / a, y / a, z / a); }
-}; 
+};
 
 struct Portal
 {
@@ -68,19 +69,19 @@ struct Field {
 int fieldID[maxPortal+1][maxPortal+1];
 
 inline void swap3(int &a, int &b, int &c) {
-	if (a > b) swap(a, b); 
-	if (b > c) swap(b, c); 
+	if (a > b) swap(a, b);
+	if (b > c) swap(b, c);
 	if (a > b) swap(a, b);
 }
 inline int portal2field(int a, int b, int c) { swap3(a, b, c); return fieldID[a][b] + c; }
 inline void field2portal(int f_id, int &a, int &b, int &c) {
-	a = 0; 
+	a = 0;
 	while (a+1 < num-2 && fieldID[a+1][a+2] + a + 3 <= f_id) a++;
-	b = a + 1; 
+	b = a + 1;
 	while (b+1 < num-1 && fieldID[a][b+1] + b + 2 <= f_id) b++;
 	c = f_id - fieldID[a][b];
 }
- 
+
 inline Portal spin(const Portal &a, const Portal &b) {
     return Portal(
         (b.y * (a.x * b.y - a.y * b.x) - b.z * (a.z * b.x - a.x * b.z)),
@@ -169,7 +170,7 @@ short int nextPortal[maxField];  // 记录每个 Field 在达到最大层数时�
 int layerCount[8]; // layerCount[i] 表示有多少个 Field 其最大层数为 i
 int mxLayer[maxPortal+1][maxPortal+1]; // mxLayer[a][b] 表示向量 a→b 左边所形成的 Field 的最大层数
 
-clock_t gap; // 记录时间 
+clock_t gap; // 记录时间
 
 int needLayer; // 询问层数
 
@@ -184,7 +185,7 @@ inline void getLabel() {
 	// 设置三个顶点的 xyz 参数
 	l2p["A1"] = xyz(5e8, 0, 0);
 	l2p["A2"] = xyz(0, 5e8, 0);
-	l2p["A3"] = xyz(0, 0, 5e8); 
+	l2p["A3"] = xyz(0, 0, 5e8);
 	p2l[xyz(5e8, 0, 0)] = "A1";
 	p2l[xyz(0, 5e8, 0)] = "A2";
 	p2l[xyz(0, 0, 5e8)] = "A3";
@@ -202,8 +203,8 @@ inline void getLabel() {
 
 	// LABEL 每一行有四个字符串，“A B C D” 表示以编号为 A,B,C 形成的 Field 的内点的编号为 D
 	ifstream fin("../LABEL");
-	int maxLayer = 0, f_num = 0; 
-	fin >> maxLayer; 
+	int maxLayer = 0, f_num = 0;
+	fin >> maxLayer;
 	for(int i = 1, j = 1; i < maxLayer; i++, j *= 3) f_num += j;
 
 	string a, b, c, d;
@@ -259,13 +260,13 @@ void outputSolution(int a, int b, int c, int level) {
 		P[c].pos = xyz(0, 0, 5e8), addPortal(P[c], level);
 	}
 	int x = portal2field(a, b, c);
-	int d = nextPortal[x]; 
+	int d = nextPortal[x];
 	P[d].pos = (P[a].pos + P[b].pos + P[c].pos) / 3;
 	addPortal(P[d], ++level);
 	addLink(P[a], P[d], level);
 	addLink(P[b], P[d], level);
 	addLink(P[c], P[d], level);
-	
+
 	// 递归输出方案
 	outputSolution(a, b, d, level);
 	outputSolution(b, c, d, level);
@@ -274,7 +275,7 @@ void outputSolution(int a, int b, int c, int level) {
 
 // 输出方案到 JSON
 inline void outputSolution(int f_id) {
-	int a, b, c; 
+	int a, b, c;
 	field2portal(f_id, a, b, c);
 	drawnitems = drawnitems_NULL;
 	bookmarks = bookmarks_INIT;
@@ -306,7 +307,7 @@ inline void outputResult() {
 				q.pop(), q_tot--;
 			}
 			q.push(Field(f_id, area(P[i], P[j], P[k]))); q_tot++;
-			
+
 			if (r_tot < maxRandomChoose) rChoose[r_tot++] = f_id;
 		}
 	}
@@ -324,7 +325,7 @@ inline void outputResult() {
 				q.pop(), q_tot--;
 			}
 			q.push(Field(f_id, -area(P[i], P[j], P[k]))); q_tot++;
-			
+
 			if (r_tot < maxRandomChoose) rChoose[r_tot++] = f_id;
 		}
 	}
@@ -389,8 +390,8 @@ int main() {
 			for (int i = 0; i < totL; i++) {
 				int b = qL[i].x;
 				int f_id = portal2field(a, b, c);
-				// int mxLayer = ; 
-				// char &Lv = layer[f_id]; 
+				// int mxLayer = ;
+				// char &Lv = layer[f_id];
 				layer[f_id] = 1;
 
 				// 从高到低枚举内层 Field 等级并遍历 List
@@ -437,8 +438,8 @@ int main() {
 			for (int i = 0; i < totR; i++) {
 				int b = qR[i].x;
 				int f_id = portal2field(a, b, c);
-				// int mxLayer = ; 
-				// char &Lv = layer[f_id]; 
+				// int mxLayer = ;
+				// char &Lv = layer[f_id];
 				layer[f_id] = 1;
 
 				// 从高到低枚举内层 Field 等级并遍历 List
@@ -479,7 +480,7 @@ int main() {
 		}
 	}
 
-	for (int i = 3; i <= 7; i++) printf("%d Layers: %d Solutions\n", i, layerCount[i]); 
+	for (int i = 3; i <= 7; i++) printf("%d Layers: %d Solutions\n", i, layerCount[i]);
 	needLayer = 0;
 	while (needLayer < 3 || needLayer > 7) {
 		puts("What kind of solutions do you need? (3-7)\n");
