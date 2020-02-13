@@ -4,8 +4,10 @@ project(Ingress-Field-Design)
 
 set(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/release.${CMAKE_SYSTEM_NAME}.${CMAKE_SYSTEM_PROCESSOR})
 
+SET(CMAKE_BUILE_TYPE DEBUG)
 
 set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_FLAGS_DEBUG "-g -Wall")
 
 add_subdirectory(lib/json)
 
@@ -50,6 +52,8 @@ target_link_libraries(MultField jsoncpp_lib)
 set_target_properties(MultField PROPERTIES OUTPUT_NAME mult-choose)
 install(TARGETS MultField
         DESTINATION MultField)
+install(FILES src/MultField/mult-result-sample.txt src/MultField/mult-portal-sample.txt
+        DESTINATION MultField)
 
 add_executable(TriField src/TriField/tri-choose.cpp)
 target_link_libraries(TriField jsoncpp_lib)
@@ -59,5 +63,5 @@ install(TARGETS TriField
 install(FILES src/TriField/result-sample.txt
         DESTINATION TriField)
 
-
-
+install(FILES src/portals2json.user.js src/LABEL
+        DESTINATION .)
