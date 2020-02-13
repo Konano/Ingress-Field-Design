@@ -8,7 +8,7 @@
 #include <cmath>
 #include <vector>
 #include <iomanip>
-#include "../jsoncpp/json.h"
+#include <json/json.h>
 
 #define rep(i, l, r) for(int i=l; i<=r; i++)
 #define dow(i, l, r) for(int i=l; i>=r; i--)

@@ -2,7 +2,8 @@
 #include <fstream>
 #include <iostream>
 #include <algorithm>
-#include "../jsoncpp/json.h"
+#include <cmath>
+#include <json/json.h>
 
 using namespace std;
 
