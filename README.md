@@ -1,5 +1,15 @@
 # Ingress-Field-Design
 
+## How to compiler?
+
+```bash
+mkdir build
+cd build
+cmake ..
+make
+make install
+```
+
 ## How to use it?
 
 [English](https://github.com/Konano/Ingress-Field-Design/wiki/Instructions-for-use)
@@ -15,3 +25,6 @@
 - [ ] HCF-SingleWork
 - [x] MultField
 - [ ] TriField
+
+- [ ] Need modify wiki
+- [ ] Compile
