@@ -218,8 +218,9 @@ inline void GetOpinion()
 
 	// LABEL 每一行有四个字符串，“A B C D” 表示以编号为 A,B,C 形成的 Field 的内点的编号为 D
 
-	ifstream fin("LABEL");
+	ifstream fin("../LABEL");
 	int tmp, num=0; fin >> tmp; for(int i=1, a=1; i<tmp; i++) num+=a, a*=3;
+	printf("%d\n", tmp);
 
 	string a, b, c, d;
 	rep(i, 1, num)
@@ -375,8 +376,6 @@ inline void OutputResult()
 
 int main()
 {
-	system("cls");
-
 	cout << "请将导出的 Bookmark 储存为 portal.txt 并放置于同目录下" << endl;
 	getchar();
 
@@ -463,6 +462,7 @@ int main()
 	puts("有关信息正在输出到result.txt，祝你好运>.<");
 	GetOpinion();
 	OutputResult();
+	puts("OK");
 
 	return 0;
 }

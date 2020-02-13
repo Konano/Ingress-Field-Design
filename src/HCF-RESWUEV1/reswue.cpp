@@ -53,7 +53,7 @@ inline void GetOpinion()
 	M0[++n]="A3", M1["A3"]=n, Lv[n]=1;
 	Add(1,2); Add(2,3); Add(1,3);
 
-	ifstream fin("LABEL");
+	ifstream fin("../LABEL");
 	int tmp, num=0; fin >> tmp; for(int i=1, a=1; i<tmp; i++) num+=a, a*=3;
 
 	string a, b, c, d;

@@ -31,11 +31,11 @@ install(TARGETS HCF-MoreKeys
 install(FILES src/HCF-MoreKeys/result-sample.txt src/HCF-MoreKeys/portal-sample.txt
         DESTINATION HCF-MoreKeys)
 
-add_executable(HCF-RESWUE src/HCF-RESWUE/reswue.cpp)
-target_link_libraries(HCF-RESWUE jsoncpp_lib)
-set_target_properties(HCF-RESWUE PROPERTIES OUTPUT_NAME reswue)
-install(TARGETS HCF-RESWUE
-        DESTINATION HCF-RESWUE)
+add_executable(HCF-RESWUEV1 src/HCF-RESWUEV1/reswue.cpp)
+target_link_libraries(HCF-RESWUEV1 jsoncpp_lib)
+set_target_properties(HCF-RESWUEV1 PROPERTIES OUTPUT_NAME reswue)
+install(TARGETS HCF-RESWUEV1
+        DESTINATION HCF-RESWUEV1)
 
 add_executable(HCF-SingleWork src/HCF-SingleWork/act.cpp)
 target_link_libraries(HCF-SingleWork jsoncpp_lib)

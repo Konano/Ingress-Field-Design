@@ -20,7 +20,7 @@ make install
 - [x] BAF
 - [ ] HCF
 - [ ] HCF-MoreKeys
-- [ ] HCF-RESWUE
+- [ ] HCF-RESWUEV1
 - [ ] HCF-SingleWork
 - [x] MultField
 - [ ] TriField
