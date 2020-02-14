@@ -186,7 +186,8 @@ int main() {
         }
     }
     sort(q.begin(), q.end());
-    maxLayer = 0;
+    maxLayer = 1;
+    for (int i = 0; i < C_num; i++) layer[i] = 0;
     for (int i = 0; i < (int)q.size(); i++) {
         layer[q[i].second] = 1;
         for (int j = 0; j < i; j++) if (layer[q[i].second] < layer[q[j].second] + 1) {
@@ -221,7 +222,8 @@ int main() {
         }
     }
     sort(q.begin(), q.end());
-    maxLayer = 0;
+    maxLayer = 1;
+    for (int i = 0; i < C_num; i++) layer[i] = 0;
     for (int i = 0; i < (int)q.size(); i++) {
         layer[q[i].second] = 1;
         for (int j = 0; j < i; j++) if (layer[q[i].second] < layer[q[j].second] + 1) {
