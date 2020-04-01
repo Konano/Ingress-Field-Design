@@ -13,6 +13,16 @@ make install
 In Windows, you need to convert `.cpp` and `.txt` from UTF-8 to GBK.
 
 <!--
+### Linux
+```bash
+mkdir build
+cd build
+cmake -DCMAKE_BUILD_TYPE=Release ..
+make
+make install
+```
+
+### Windows
 ```bash
 (linux)
 find ./src -type f -name "*.txt" -exec enca -L none -x GBK {} \;
@@ -20,7 +30,7 @@ find ./src -type f -name "*.cpp" -exec enca -L none -x GBK {} \;
 (win)
 mkdir buildwin
 cd buildwin
-cmake -G"MinGW Makefiles" ..
+cmake -DCMAKE_BUILD_TYPE=Release -G"MinGW Makefiles" ..
 make
 make install
 (linux)
