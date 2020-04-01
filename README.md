@@ -6,9 +6,12 @@
 mkdir build
 cd build
 cmake ..
+# cmake -G"MinGW Makefiles" ..
 make
 make install
 ```
+
+In Windows, you need to convert `.cpp` and `.txt` from UTF-8 to GBK.
 
 ## How to use it?
 
