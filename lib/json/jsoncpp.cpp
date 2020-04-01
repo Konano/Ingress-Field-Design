@@ -4411,34 +4411,37 @@ static String valueToQuotedStringN(const char* value, unsigned length,
     // sequence.
     // Should add a flag to allow this compatibility mode and prevent this
     // sequence from occurring.
-    default: {
-      if (emitUTF8) {
-        result += *c;
-      } else {
-        unsigned int codepoint = utf8ToCodepoint(c, end);
-        const unsigned int FIRST_NON_CONTROL_CODEPOINT = 0x20;
-        const unsigned int LAST_NON_CONTROL_CODEPOINT = 0x7F;
-        const unsigned int FIRST_SURROGATE_PAIR_CODEPOINT = 0x10000;
-        // don't escape non-control characters
-        // (short escape sequence are applied above)
-        if (FIRST_NON_CONTROL_CODEPOINT <= codepoint &&
-            codepoint <= LAST_NON_CONTROL_CODEPOINT) {
-          result += static_cast<char>(codepoint);
-        } else if (codepoint <
-                   FIRST_SURROGATE_PAIR_CODEPOINT) { // codepoint is in Basic
-                                                     // Multilingual Plane
-          result += "\\u";
-          result += toHex16Bit(codepoint);
-        } else { // codepoint is not in Basic Multilingual Plane
-                 // convert to surrogate pair first
-          codepoint -= FIRST_SURROGATE_PAIR_CODEPOINT;
-          result += "\\u";
-          result += toHex16Bit((codepoint >> 10) + 0xD800);
-          result += "\\u";
-          result += toHex16Bit((codepoint & 0x3FF) + 0xDC00);
-        }
-      }
-    } break;
+    default: 
+		  result += *c;
+		  break;
+    // default: {
+    //   if (emitUTF8) {
+    //     result += *c;
+    //   } else {
+    //     unsigned int codepoint = utf8ToCodepoint(c, end);
+    //     const unsigned int FIRST_NON_CONTROL_CODEPOINT = 0x20;
+    //     const unsigned int LAST_NON_CONTROL_CODEPOINT = 0x7F;
+    //     const unsigned int FIRST_SURROGATE_PAIR_CODEPOINT = 0x10000;
+    //     // don't escape non-control characters
+    //     // (short escape sequence are applied above)
+    //     if (FIRST_NON_CONTROL_CODEPOINT <= codepoint &&
+    //         codepoint <= LAST_NON_CONTROL_CODEPOINT) {
+    //       result += static_cast<char>(codepoint);
+    //     } else if (codepoint <
+    //                FIRST_SURROGATE_PAIR_CODEPOINT) { // codepoint is in Basic
+    //                                                  // Multilingual Plane
+    //       result += "\\u";
+    //       result += toHex16Bit(codepoint);
+    //     } else { // codepoint is not in Basic Multilingual Plane
+    //              // convert to surrogate pair first
+    //       codepoint -= FIRST_SURROGATE_PAIR_CODEPOINT;
+    //       result += "\\u";
+    //       result += toHex16Bit((codepoint >> 10) + 0xD800);
+    //       result += "\\u";
+    //       result += toHex16Bit((codepoint & 0x3FF) + 0xDC00);
+    //     }
+    //   }
+    // } break;
     }
   }
   result += "\"";
