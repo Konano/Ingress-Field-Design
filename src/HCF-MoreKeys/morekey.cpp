@@ -210,13 +210,13 @@ bool operator < (xyz a, xyz b){return a.x<b.x || (a.x==b.x && a.y<b.y) || (a.x==
 map<string,xyz> M0; // 编号映射到 xyz 参数
 map<xyz,string> M1; // xyz 参数映射到编号
 
-inline xyz Ave(xyz a, xyz b, xyz c){return (xyz){(a.x+b.x+c.x)/3, (a.y+b.y+c.y)/3, (a.z+b.z+c.z)/3};}
+inline xyz Ave(xyz a, xyz b, xyz c){return xyz{(a.x+b.x+c.x)/3, (a.y+b.y+c.y)/3, (a.z+b.z+c.z)/3};}
 // 由 Field 上三点的 xyz 得到内点的 xyz
 
 inline void GetOpinion()
 {
-	M0["A1"]=(xyz){(int)5e8,0,0}, M0["A2"]=(xyz){0,(int)5e8,0}, M0["A3"]=(xyz){0,0,(int)5e8}; // 设置三个顶点的 xyz 参数
-	M1[(xyz){(int)5e8,0,0}]="A1", M1[(xyz){0,(int)5e8,0}]="A2", M1[(xyz){0,0,(int)5e8}]="A3";
+	M0["A1"]=xyz{(int)5e8,0,0}, M0["A2"]=xyz{0,(int)5e8,0}, M0["A3"]=xyz{0,0,(int)5e8}; // 设置三个顶点的 xyz 参数
+	M1[xyz{(int)5e8,0,0}]="A1", M1[xyz{0,(int)5e8,0}]="A2", M1[xyz{0,0,(int)5e8}]="A3";
 
 	string tmp1="A", tmp2="Lv 0";
 	rep(i, 1, QLevel)
@@ -301,9 +301,9 @@ void OutputPlan(int a, int b, int c, int lv)
 	if (lv == 1)
 	{
 		AddLine(a,b,lv), AddLine(b,c,lv), AddLine(c,a,lv);
-		pos[a]=(xyz){(int)5e8,0,0}, AddPortal(a,lv); // 由 xyz 参数查询到当前点所对应的编号
-		pos[b]=(xyz){0,(int)5e8,0}, AddPortal(b,lv);
-		pos[c]=(xyz){0,0,(int)5e8}, AddPortal(c,lv);
+		pos[a]=xyz{(int)5e8,0,0}, AddPortal(a,lv); // 由 xyz 参数查询到当前点所对应的编号
+		pos[b]=xyz{0,(int)5e8,0}, AddPortal(b,lv);
+		pos[c]=xyz{0,0,(int)5e8}, AddPortal(c,lv);
 	}
 	int x=GetFL(a,b,c), d=NextPortal[x]; pos[d]=Ave(pos[a],pos[b],pos[c]);
 	AddPortal(d,++lv);
@@ -354,9 +354,9 @@ inline void OutputResult()
 	rep(i, 1, n) rep(j, i+1, n) rep(k, j+1, n) if (Level[FieldLabel=GetFL(i,j,k)]>=QLevel)
 	{
 		if ((int)qmin.size()==minField) qmin.pop();
-		qmin.push((Field){FieldLabel,Area(i,j,k)});
+		qmin.push(Field{FieldLabel,Area(i,j,k)});
 		if ((int)qmax.size()==maxField) qmax.pop();
-		qmax.push((Field){FieldLabel,-Area(i,j,k)});
+		qmax.push(Field{FieldLabel,-Area(i,j,k)});
 		if (tot<=OPRandomSize) OPRandom[tot++]=FieldLabel;
 	}
 	// 输出最小的前 minField 个方案
@@ -385,9 +385,9 @@ inline void OutputResult()
 			Level[GetFL(h,j,k)]>=QLevel-1)
 		{
 			if ((int)qmin.size()==minField) qmin.pop();
-			qmin.push((Field){FieldLabel,Area(i,j,k)});
+			qmin.push(Field{FieldLabel,Area(i,j,k)});
 			if ((int)qmax.size()==maxField) qmax.pop();
-			qmax.push((Field){FieldLabel,-Area(i,j,k)});
+			qmax.push(Field{FieldLabel,-Area(i,j,k)});
 			if (tot<=OPRandomSize) OPRandom[tot++]=FieldLabel;
 		}
 	nMK(i, ii, 1) nMK(j, jj, ii+1) nMK(k, kk, jj+1) if (Level[FieldLabel=GetFL(i,j,k)]>=QLevel) MK(h, hh, 1)
@@ -397,9 +397,9 @@ inline void OutputResult()
 			Level[GetFL(h,j,k)]>=QLevel-1)
 		{
 			if ((int)qmin.size()==minField) qmin.pop();
-			qmin.push((Field){FieldLabel,Area(i,j,k)});
+			qmin.push(Field{FieldLabel,Area(i,j,k)});
 			if ((int)qmax.size()==maxField) qmax.pop();
-			qmax.push((Field){FieldLabel,-Area(i,j,k)});
+			qmax.push(Field{FieldLabel,-Area(i,j,k)});
 			if (tot<=OPRandomSize) OPRandom[tot++]=FieldLabel;
 		}
 	// 输出最小的前 minField 个方案
@@ -421,9 +421,9 @@ inline void OutputResult()
 			Level[GetFL(h,j,k)]>=QLevel-1)
 		{
 			if ((int)qmin.size()==minField) qmin.pop();
-			qmin.push((Field){FieldLabel,Area(i,j,k)});
+			qmin.push(Field{FieldLabel,Area(i,j,k)});
 			if ((int)qmax.size()==maxField) qmax.pop();
-			qmax.push((Field){FieldLabel,-Area(i,j,k)});
+			qmax.push(Field{FieldLabel,-Area(i,j,k)});
 			if (tot<=OPRandomSize) OPRandom[tot++]=FieldLabel;
 		}
 	MK(i, ii, 1) nMK(j, jj, 1) nMK(k, kk, jj+1) if (Level[FieldLabel=GetFL(i,j,k)]>=QLevel) MK(h, hh, 1)
@@ -433,9 +433,9 @@ inline void OutputResult()
 			Level[GetFL(h,j,k)]>=QLevel-1)
 		{
 			if ((int)qmin.size()==minField) qmin.pop();
-			qmin.push((Field){FieldLabel,Area(i,j,k)});
+			qmin.push(Field{FieldLabel,Area(i,j,k)});
 			if ((int)qmax.size()==maxField) qmax.pop();
-			qmax.push((Field){FieldLabel,-Area(i,j,k)});
+			qmax.push(Field{FieldLabel,-Area(i,j,k)});
 			if (tot<=OPRandomSize) OPRandom[tot++]=FieldLabel;
 		}
 	// 输出最小的前 minField 个方案
@@ -457,9 +457,9 @@ inline void OutputResult()
 			Level[GetFL(h,j,k)]>=QLevel-1)
 		{
 			if ((int)qmin.size()==minField) qmin.pop();
-			qmin.push((Field){FieldLabel,Area(i,j,k)});
+			qmin.push(Field{FieldLabel,Area(i,j,k)});
 			if ((int)qmax.size()==maxField) qmax.pop();
-			qmax.push((Field){FieldLabel,-Area(i,j,k)});
+			qmax.push(Field{FieldLabel,-Area(i,j,k)});
 			if (tot<=OPRandomSize) OPRandom[tot++]=FieldLabel;
 		}
 	MK(i, ii, 1) MK(j, jj, ii+1) nMK(k, kk, 1) if (Level[FieldLabel=GetFL(i,j,k)]>=QLevel) MK(h, hh, 1)
@@ -469,9 +469,9 @@ inline void OutputResult()
 			Level[GetFL(h,j,k)]>=QLevel-1)
 		{
 			if ((int)qmin.size()==minField) qmin.pop();
-			qmin.push((Field){FieldLabel,Area(i,j,k)});
+			qmin.push(Field{FieldLabel,Area(i,j,k)});
 			if ((int)qmax.size()==maxField) qmax.pop();
-			qmax.push((Field){FieldLabel,-Area(i,j,k)});
+			qmax.push(Field{FieldLabel,-Area(i,j,k)});
 			if (tot<=OPRandomSize) OPRandom[tot++]=FieldLabel;
 		}
 	// 输出最小的前 minField 个方案
@@ -493,9 +493,9 @@ inline void OutputResult()
 			Level[GetFL(h,j,k)]>=QLevel-1)
 		{
 			if ((int)qmin.size()==minField) qmin.pop();
-			qmin.push((Field){FieldLabel,Area(i,j,k)});
+			qmin.push(Field{FieldLabel,Area(i,j,k)});
 			if ((int)qmax.size()==maxField) qmax.pop();
-			qmax.push((Field){FieldLabel,-Area(i,j,k)});
+			qmax.push(Field{FieldLabel,-Area(i,j,k)});
 			if (tot<=OPRandomSize) OPRandom[tot++]=FieldLabel;
 		}
 	// 输出最小的前 minField 个方案
@@ -555,7 +555,7 @@ int main()
 	rep(c, 3, n) dow(a, c-2, 1) // 从左往右枚举右端点，从右往左枚举左端点
 	{
 		totL=totR=0;
-		rep(b, a+1, c-1) if (Left(a,c,b)) qL[++totL]=(Field){b,Area(a,b,c)}; else qR[++totR]=(Field){b,Area(a,c,b)};
+		rep(b, a+1, c-1) if (Left(a,c,b)) qL[++totL]=Field{b,Area(a,b,c)}; else qR[++totR]=Field{b,Area(a,c,b)};
 		// 枚举中间端点，qL[] 为向量 a→c 左边的 Portal（总数为 totL），qR[] 为向量 a→c 右边的 Portal（总数为 totR）
 		if (totL)
 		{
