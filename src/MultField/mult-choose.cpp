@@ -29,8 +29,8 @@ struct Portal
         istringstream iss(latlng);
         iss >> lat >> tmp_char >> lng;
         x = cos(lat / 180.0 * pi) * cos(lng / 180.0 * pi);
-        y = sin(lat / 180.0 * pi) * cos(lng / 180.0 * pi);
-        z = sin(lng / 180.0 * pi);
+        y = cos(lat / 180.0 * pi) * sin(lng / 180.0 * pi);
+        z = sin(lat / 180.0 * pi);
     }
     bool operator==(const Portal &a) const { return guid == a.guid; }
 } PortalA[maxPortal], PortalB[maxPortal], PortalC[maxPortal];
