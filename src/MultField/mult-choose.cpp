@@ -192,7 +192,7 @@ int main() {
         layer[q[i].second] = 1;
         for (int j = 0; j < i; j++) if (layer[q[i].second] < layer[q[j].second] + 1) {
             for (int ia = 0; ia < A_num; ia++)
-                for (int ib = 0; ib < A_num; ib++)
+                for (int ib = 0; ib < B_num; ib++)
                     if (!inField(PortalA[ia], PortalB[ib], PortalC[q[i].second], PortalC[q[j].second])) goto brk1;
             layer[q[i].second] = layer[q[j].second] + 1;
             nxt[q[i].second] = q[j].second;
@@ -228,7 +228,7 @@ int main() {
         layer[q[i].second] = 1;
         for (int j = 0; j < i; j++) if (layer[q[i].second] < layer[q[j].second] + 1) {
             for (int ia = 0; ia < A_num; ia++)
-                for (int ib = 0; ib < A_num; ib++)
+                for (int ib = 0; ib < B_num; ib++)
                     if (!inField(PortalA[ia], PortalB[ib], PortalC[q[i].second], PortalC[q[j].second])) goto brk2;
             layer[q[i].second] = layer[q[j].second] + 1;
             nxt[q[i].second] = q[j].second;
